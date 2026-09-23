@@ -201,14 +201,12 @@ fun ForgotPasswordScreen(
             } else {
                 Button(
                     onClick = { 
-                        // Construct the absolute URL dynamically so it works on any repo name
+                        // Construct the absolute URL dynamically so it works on any repo name or domain
                         val currentUrl = platformGetCurrentUrl()
-                        val baseUrl = if (currentUrl.contains(".html")) {
-                            currentUrl.substringBeforeLast("/")
-                        } else if (currentUrl.endsWith("/")) {
-                            currentUrl.removeSuffix("/")
-                        } else {
-                            currentUrl
+                        val baseUrl = when {
+                            currentUrl.contains(".html") -> currentUrl.substringBeforeLast("/")
+                            currentUrl.endsWith("/") -> currentUrl.removeSuffix("/")
+                            else -> currentUrl
                         }
                         val redirectUrl = "$baseUrl/reset-password.html"
                         viewModel.sendResetPasswordEmail(email, redirectUrl) 
