@@ -9,11 +9,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.alfleyla.zeituna.auth.AuthViewModel
+import com.alfleyla.zeituna.utils.platformGetCurrentUrl
 
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -65,8 +67,16 @@ fun LoginScreen(
             }
         }
 
-        TextButton(onClick = onNavigateToRegister, enabled = !isLoading) {
-            Text("Don't have an account? Register")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(onClick = onNavigateToRegister, enabled = !isLoading) {
+                Text("Register")
+            }
+            TextButton(onClick = onNavigateToForgotPassword, enabled = !isLoading) {
+                Text("Forgot Password?")
+            }
         }
     }
 }
@@ -139,6 +149,80 @@ fun RegisterScreen(
 
         TextButton(onClick = onNavigateToLogin, enabled = !isLoading) {
             Text("Already have an account? Login")
+        }
+    }
+}
+
+@Composable
+fun ForgotPasswordScreen(
+    viewModel: AuthViewModel,
+    onNavigateToLogin: () -> Unit
+) {
+    var email by remember { mutableStateOf("") }
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+    val resetSent by viewModel.resetPasswordSent.collectAsState()
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Reset Password", style = MaterialTheme.typography.h4)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (error != null) {
+            Text(error!!, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
+        }
+
+        if (resetSent == true) {
+            Text(
+                "Check your email for a password reset link.",
+                color = Color(0xFF4CAF50),
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Button(onClick = onNavigateToLogin, modifier = Modifier.fillMaxWidth()) {
+                Text("Back to Login")
+            }
+        } else {
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (isLoading) {
+                CircularProgressIndicator()
+            } else {
+                Button(
+                    onClick = { 
+                        // Construct the absolute URL dynamically so it works on any repo name
+                        val currentUrl = platformGetCurrentUrl()
+                        val baseUrl = if (currentUrl.contains(".html")) {
+                            currentUrl.substringBeforeLast("/")
+                        } else if (currentUrl.endsWith("/")) {
+                            currentUrl.removeSuffix("/")
+                        } else {
+                            currentUrl
+                        }
+                        val redirectUrl = "$baseUrl/reset-password.html"
+                        viewModel.sendResetPasswordEmail(email, redirectUrl) 
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = email.isNotBlank()
+                ) {
+                    Text("Send Reset Link")
+                }
+            }
+
+            TextButton(onClick = onNavigateToLogin, enabled = !isLoading) {
+                Text("Back to Login")
+            }
         }
     }
 }

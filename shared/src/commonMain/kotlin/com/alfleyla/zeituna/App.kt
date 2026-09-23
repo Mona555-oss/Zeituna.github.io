@@ -26,6 +26,7 @@ import com.alfleyla.zeituna.profile.ProfileViewModel
 import com.alfleyla.zeituna.theme.ZeitunaTheme
 import com.alfleyla.zeituna.ui.auth.LoginScreen
 import com.alfleyla.zeituna.ui.auth.RegisterScreen
+import com.alfleyla.zeituna.ui.auth.ForgotPasswordScreen
 import com.alfleyla.zeituna.ui.dashboard.TeacherDashboardScreen
 import com.alfleyla.zeituna.ui.dashboard.StudentDashboardScreen
 import com.alfleyla.zeituna.ui.booking.BookingScreen
@@ -33,9 +34,7 @@ import com.alfleyla.zeituna.ui.booking.CalendarBookingScreen
 import com.alfleyla.zeituna.ui.booking.ServiceDetailsScreen
 import com.alfleyla.zeituna.ui.materials.MaterialsScreen
 import com.alfleyla.zeituna.ui.profile.AccountScreen
-import com.alfleyla.zeituna.utils.platformGetCurrentUrl
-import com.alfleyla.zeituna.utils.platformGetSessionData
-import com.alfleyla.zeituna.utils.platformPutSessionData
+import com.alfleyla.zeituna.utils.*
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.postgrest.postgrest
@@ -45,7 +44,7 @@ import silentspace.shared.generated.resources.Res
 import silentspace.shared.generated.resources.sub_icon
 
 enum class Screen {
-    Landing, Login, Register, Dashboard, Booking, ServiceDetails, CalendarBooking, Materials, Account
+    Landing, Login, Register, ForgotPassword, Dashboard, Booking, ServiceDetails, CalendarBooking, Materials, Account
 }
 
 @Composable
@@ -109,12 +108,12 @@ fun App() {
             val status = sessionStatus.value
             if (status is SessionStatus.Authenticated) {
                 // If logged in but on a guest screen, move to dashboard
-                if (currentScreen == Screen.Landing || currentScreen == Screen.Login || currentScreen == Screen.Register) {
+                if (currentScreen == Screen.Landing || currentScreen == Screen.Login || currentScreen == Screen.Register || currentScreen == Screen.ForgotPassword) {
                     currentScreen = Screen.Dashboard
                 }
             } else if (status is SessionStatus.NotAuthenticated) {
                 // If not logged in and on an internal screen, move back to landing
-                if (currentScreen != Screen.Landing && currentScreen != Screen.Login && currentScreen != Screen.Register) {
+                if (currentScreen != Screen.Landing && currentScreen != Screen.Login && currentScreen != Screen.Register && currentScreen != Screen.ForgotPassword) {
                     currentScreen = Screen.Landing
                 }
             }
@@ -132,8 +131,8 @@ fun App() {
             Screen.Landing -> {
                 LandingScreen(
                     onLoginClick = { currentScreen = Screen.Login },
-                    onNavigateToPrivacy = { /* Link logic */ },
-                    onNavigateToTerms = { /* Link logic */ }
+                    onNavigateToPrivacy = { platformOpenUrl("./privacy_policy.html") },
+                    onNavigateToTerms = { platformOpenUrl("./terms_of_service.html") }
                 )
             }
             Screen.Login -> {
@@ -142,6 +141,11 @@ fun App() {
                     onNavigateToRegister = { 
                         authViewModel.clearError()
                         currentScreen = Screen.Register 
+                    },
+                    onNavigateToForgotPassword = {
+                        authViewModel.clearError()
+                        authViewModel.clearResetStatus()
+                        currentScreen = Screen.ForgotPassword
                     }
                 )
             }
@@ -151,6 +155,15 @@ fun App() {
                     onNavigateToLogin = { 
                         authViewModel.clearError()
                         currentScreen = Screen.Login 
+                    }
+                )
+            }
+            Screen.ForgotPassword -> {
+                ForgotPasswordScreen(
+                    viewModel = authViewModel,
+                    onNavigateToLogin = {
+                        authViewModel.clearError()
+                        currentScreen = Screen.Login
                     }
                 )
             }
