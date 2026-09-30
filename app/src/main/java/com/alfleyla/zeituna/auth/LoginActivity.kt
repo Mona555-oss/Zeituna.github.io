@@ -29,8 +29,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private val PRIVACY_URL = "https://mona555-oss.github.io/privacy_policy.html"
-    private val TERMS_URL = "https://mona555-oss.github.io/terms_of_service.html"
+    private val PRIVACY_URL = "https://zeitun-a.com/privacy_policy.html"
+    private val TERMS_URL = "https://zeitun-a.com/terms_of_service.html"
 
     // TODO: MUST REPLACE THIS with your actual Web Client ID from Google Cloud Console
     private val WEB_CLIENT_ID = "909908994444-vptsd95e8kceuet7hfk1qurtg346r6p5.apps.googleusercontent.com"
@@ -168,7 +168,7 @@ class LoginActivity : AppCompatActivity() {
             .setTitle("Reset Password")
             .setMessage("Send a password reset link to $email?")
             .setPositiveButton("Send") { _, _ ->
-                val myRedirectUrl = "https://mona555-oss.github.io/reset-password.html"
+                val myRedirectUrl = "https://zeitun-a.com/reset-password.html"
                 viewModel.sendResetPasswordEmail(email, myRedirectUrl)
             }
             .setNegativeButton("Cancel", null)

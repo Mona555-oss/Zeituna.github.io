@@ -54,7 +54,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
-                      android:host="mona555-oss.github.io"
+                      android:host="zeitun-a.com"
                       android:pathPrefix="/index.html" />
             </intent-filter>
         </activity>

@@ -137,7 +137,7 @@ fun CalendarBookingScreen(
                         color = TurquoisePrimary,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable {
-                            platformOpenUrl("https://mona555-oss.github.io/terms_of_service.html")
+                            platformOpenUrl("https://zeitun-a.com/terms_of_service.html")
                         }
                     )
                 }
