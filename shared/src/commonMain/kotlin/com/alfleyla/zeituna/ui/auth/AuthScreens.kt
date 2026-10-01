@@ -7,7 +7,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.alfleyla.zeituna.auth.AuthViewModel
 import com.alfleyla.zeituna.utils.platformGetCurrentUrl
 
@@ -91,6 +93,7 @@ fun RegisterScreen(
     var name by remember { mutableStateOf("") }
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
+    val success by viewModel.registrationSuccess.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -105,50 +108,72 @@ fun RegisterScreen(
             Text(error!!, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
         }
 
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Full Name") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isLoading
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isLoading
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isLoading
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (isLoading) {
-            CircularProgressIndicator()
-        } else {
-            Button(
-                onClick = { viewModel.register(email, password, name) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Register")
+        if (success == true) {
+            Text(
+                "Registration successful! Please check your email to confirm your account.",
+                color = Color(0xFF4CAF50),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Button(onClick = onNavigateToLogin, modifier = Modifier.fillMaxWidth()) {
+                Text("Back to Login")
             }
-        }
+        } else {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Full Name") },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading
+            )
 
-        TextButton(onClick = onNavigateToLogin, enabled = !isLoading) {
-            Text("Already have an account? Login")
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (isLoading) {
+                CircularProgressIndicator()
+            } else {
+                Button(
+                    onClick = { 
+                        // Enhanced Base URL detection
+                        val currentUrl = platformGetCurrentUrl().split("?")[0].split("#")[0]
+                        val baseUrl = if (currentUrl.endsWith(".html")) {
+                            currentUrl.substringBeforeLast("/")
+                        } else {
+                            currentUrl.removeSuffix("/")
+                        }
+                        val redirectUrl = "https://zeitun-a.com/email_confirmation.html"
+                        viewModel.register(email, password, name, redirectUrl) 
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Register")
+                }
+            }
+
+            TextButton(onClick = onNavigateToLogin, enabled = !isLoading) {
+                Text("Already have an account? Login")
+            }
         }
     }
 }
@@ -201,14 +226,14 @@ fun ForgotPasswordScreen(
             } else {
                 Button(
                     onClick = { 
-                        // Construct the absolute URL dynamically so it works on any repo name or domain
-                        val currentUrl = platformGetCurrentUrl()
-                        val baseUrl = when {
-                            currentUrl.contains(".html") -> currentUrl.substringBeforeLast("/")
-                            currentUrl.endsWith("/") -> currentUrl.removeSuffix("/")
-                            else -> currentUrl
+                        // Enhanced Base URL detection
+                        val currentUrl = platformGetCurrentUrl().split("?")[0].split("#")[0]
+                        val baseUrl = if (currentUrl.endsWith(".html")) {
+                            currentUrl.substringBeforeLast("/")
+                        } else {
+                            currentUrl.removeSuffix("/")
                         }
-                        val redirectUrl = "$baseUrl/reset-password.html"
+                        val redirectUrl = "https://zeitun-a.com/reset-password.html"
                         viewModel.sendResetPasswordEmail(email, redirectUrl) 
                     },
                     modifier = Modifier.fillMaxWidth(),

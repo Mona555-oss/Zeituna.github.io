@@ -73,7 +73,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun register(emailInput: String, passwordInput: String, fullNameInput: String) {
+    fun register(emailInput: String, passwordInput: String, fullNameInput: String, redirectUrlInput: String? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -83,7 +83,10 @@ class AuthViewModel : ViewModel() {
 
                 try { SupabaseClientObj.client.auth.signOut() } catch (e: Exception) {}
                 
-                val user = SupabaseClientObj.client.auth.signUpWith(Email) {
+                val user = SupabaseClientObj.client.auth.signUpWith(
+                    provider = Email,
+                    redirectUrl = redirectUrlInput
+                ) {
                     email = emailInput
                     password = passwordInput
                     data = buildJsonObject { put("full_name", fullNameInput) }
