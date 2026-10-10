@@ -82,11 +82,14 @@ actual fun platformClearUrlParams() {
     try { window.history.replaceState(null, "", window.location.pathname) } catch (e: Throwable) {}
 }
 
+/**
+ * Switched to localStorage for better persistence across PayPal redirects.
+ */
 actual fun platformPutSessionData(key: String, value: String) {
-    window.sessionStorage.setItem(key, value)
+    window.localStorage.setItem(key, value)
 }
 
-actual fun platformGetSessionData(key: String): String? = window.sessionStorage.getItem(key)
+actual fun platformGetSessionData(key: String): String? = window.localStorage.getItem(key)
 
 // Fixed JS interop for Kotlin/Wasm
 @JsFun("() => Intl.DateTimeFormat().resolvedOptions().timeZone")
