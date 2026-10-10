@@ -2,6 +2,10 @@ package com.alfleyla.zeituna.utils
 
 import android.util.Base64
 import android.util.Log
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import java.util.TimeZone
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -44,4 +48,18 @@ actual fun platformGetSessionData(key: String): String? {
 
 actual fun platformGetTimeZoneId(): String {
     return TimeZone.getDefault().id
+}
+
+actual fun platformPickFile(allowedExtensions: List<String>, onResult: (ByteArray?, String?) -> Unit) {
+    // File picking on Android is handled by Intents in Activity/Fragment
+}
+
+@Composable
+actual fun PlatformVerticalScrollbar(modifier: Modifier, scrollState: ScrollState) {
+    // Android uses native scrollbars or none for this type of UI
+}
+
+@Composable
+actual fun PlatformVerticalScrollbar(modifier: Modifier, lazyListState: LazyListState) {
+    // Android uses native scrollbars or none for this type of UI
 }

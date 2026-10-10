@@ -2,10 +2,12 @@ package com.alfleyla.zeituna.ui.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -46,10 +48,7 @@ fun TeacherDashboardScreen(
 
     var showCreateQuiz by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        viewModel.loadProfileData()
-    }
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -107,7 +106,7 @@ fun TeacherDashboardScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
             ) {
                 Card(
                     elevation = 2.dp,
@@ -186,6 +185,11 @@ fun TeacherDashboardScreen(
 
                 Spacer(modifier = Modifier.height(100.dp))
             }
+
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(scrollState)
+            )
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -272,6 +276,8 @@ fun CreateQuizDialog(
     var selectedThumbnailName by remember { mutableStateOf<String?>(null) }
     var thumbnailBytes by remember { mutableStateOf<ByteArray?>(null) }
 
+    val scrollState = rememberScrollState()
+
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -292,82 +298,89 @@ fun CreateQuizDialog(
                 
                 Divider()
 
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 20.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    
-                    Text("Basic Information", fontWeight = FontWeight.Bold, color = TurquoiseDark)
-                    OutlinedTextField(value = subject, onValueChange = { subject = it }, label = { Text("Subject (e.g. MSA Lesson 1)") }, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(value = language, onValueChange = { language = it }, label = { Text("Language (e.g. Arabic)") }, modifier = Modifier.fillMaxWidth())
-                    
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    // Question Blocks
-                    QuizQuestionInput("Question 1", q1, q1o1, q1o2, q1o3, a1, 
-                        onQ = { q1 = it }, onO1 = { q1o1 = it }, onO2 = { q1o2 = it }, onO3 = { q1o3 = it }, onA = { a1 = it })
-
-                    QuizQuestionInput("Question 2", q2, q2o1, q2o2, q2o3, a2, 
-                        onQ = { q2 = it }, onO1 = { q2o1 = it }, onO2 = { q2o2 = it }, onO3 = { q2o3 = it }, onA = { a2 = it })
-
-                    QuizQuestionInput("Question 3", q3, q3o1, q3o2, q3o3, a3, 
-                        onQ = { q3 = it }, onO1 = { q3o1 = it }, onO2 = { q3o2 = it }, onO3 = { q3o3 = it }, onA = { a3 = it })
-                    
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text("Promo Details", fontWeight = FontWeight.Bold, color = TurquoiseDark)
-                    OutlinedTextField(value = code, onValueChange = { code = it.uppercase() }, label = { Text("Secret Promo Code") }, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(value = discount, onValueChange = { discount = it }, label = { Text("Discount Amount ($)") }, modifier = Modifier.fillMaxWidth())
-                    
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    // Video Picker
-                    Button(
-                        onClick = { 
-                            platformPickFile(listOf("mp4", "mov", "avi")) { bytes, name ->
-                                if (bytes != null && name != null) {
-                                    videoBytes = bytes
-                                    selectedVideoName = name
-                                }
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = if (videoBytes != null) Color(0xFF4CAF50) else Color.LightGray),
-                        shape = RoundedCornerShape(8.dp)
+                Box(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(horizontal = 20.dp)
                     ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = null, tint = Color.White)
-                        Spacer(Modifier.width(8.dp))
-                        Text(selectedVideoName, color = Color.White)
-                    }
+                        Spacer(modifier = Modifier.height(20.dp))
+                        
+                        Text("Basic Information", fontWeight = FontWeight.Bold, color = TurquoiseDark)
+                        OutlinedTextField(value = subject, onValueChange = { subject = it }, label = { Text("Subject (e.g. MSA Lesson 1)") }, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(value = language, onValueChange = { language = it }, label = { Text("Language (e.g. Arabic)") }, modifier = Modifier.fillMaxWidth())
+                        
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        // Question Blocks
+                        QuizQuestionInput("Question 1", q1, q1o1, q1o2, q1o3, a1, 
+                            onQ = { q1 = it }, onO1 = { q1o1 = it }, onO2 = { q1o2 = it }, onO3 = { q1o3 = it }, onA = { a1 = it })
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        QuizQuestionInput("Question 2", q2, q2o1, q2o2, q2o3, a2, 
+                            onQ = { q2 = it }, onO1 = { q2o1 = it }, onO2 = { q2o2 = it }, onO3 = { q2o3 = it }, onA = { a2 = it })
 
-                    // Thumbnail Picker
-                    Button(
-                        onClick = { 
-                            platformPickFile(listOf("jpg", "jpeg", "png", "webp")) { bytes, name ->
-                                if (bytes != null && name != null) {
-                                    thumbnailBytes = bytes
-                                    selectedThumbnailName = name
+                        QuizQuestionInput("Question 3", q3, q3o1, q3o2, q3o3, a3, 
+                            onQ = { q3 = it }, onO1 = { q3o1 = it }, onO2 = { q3o2 = it }, onO3 = { q3o3 = it }, onA = { a3 = it })
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text("Promo Details", fontWeight = FontWeight.Bold, color = TurquoiseDark)
+                        OutlinedTextField(value = code, onValueChange = { code = it.uppercase() }, label = { Text("Secret Promo Code") }, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(value = discount, onValueChange = { discount = it }, label = { Text("Discount Amount ($)") }, modifier = Modifier.fillMaxWidth())
+                        
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        // Video Picker
+                        Button(
+                            onClick = { 
+                                platformPickFile(listOf("mp4", "mov", "avi")) { bytes, name ->
+                                    if (bytes != null && name != null) {
+                                        videoBytes = bytes
+                                        selectedVideoName = name
+                                    }
                                 }
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = if (thumbnailBytes != null) TurquoisePrimary else Color.LightGray),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Icon(Icons.Default.Place, contentDescription = null, tint = Color.White)
-                        Spacer(Modifier.width(8.dp))
-                        Text(selectedThumbnailName ?: "Select thumbnail (Image)", color = Color.White)
+                            },
+                            modifier = Modifier.fillMaxWidth().height(50.dp),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = if (videoBytes != null) Color(0xFF4CAF50) else Color.LightGray),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Icon(Icons.Default.PlayArrow, contentDescription = null, tint = Color.White)
+                            Spacer(Modifier.width(8.dp))
+                            Text(selectedVideoName, color = Color.White)
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Thumbnail Picker
+                        Button(
+                            onClick = { 
+                                platformPickFile(listOf("jpg", "jpeg", "png", "webp")) { bytes, name ->
+                                    if (bytes != null && name != null) {
+                                        thumbnailBytes = bytes
+                                        selectedThumbnailName = name
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth().height(50.dp),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = if (thumbnailBytes != null) TurquoisePrimary else Color.LightGray),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Icon(Icons.Default.Place, contentDescription = null, tint = Color.White)
+                            Spacer(Modifier.width(8.dp))
+                            Text(selectedThumbnailName ?: "Select thumbnail (Image)", color = Color.White)
+                        }
+                        
+                        if (videoBytes != null) {
+                            Text("Video ready: ${(videoBytes!!.size / 1024 / 1024)} MB", fontSize = 11.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
+                        }
+                        
+                        Spacer(modifier = Modifier.height(32.dp))
                     }
-                    
-                    if (videoBytes != null) {
-                        Text("Video ready: ${(videoBytes!!.size / 1024 / 1024)} MB", fontSize = 11.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
-                    }
-                    
-                    Spacer(modifier = Modifier.height(32.dp))
+
+                    VerticalScrollbar(
+                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(scrollState)
+                    )
                 }
                 
                 Divider()

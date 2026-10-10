@@ -26,6 +26,7 @@ import com.alfleyla.zeituna.booking.BookingViewModel
 import com.alfleyla.zeituna.data.models.LessonService
 import com.alfleyla.zeituna.theme.TurquoisePrimary
 import com.alfleyla.zeituna.theme.TurquoiseDark
+import com.alfleyla.zeituna.utils.PlatformVerticalScrollbar
 import org.jetbrains.compose.resources.painterResource
 import silentspace.shared.generated.resources.Res
 import silentspace.shared.generated.resources.sub_icon
@@ -44,6 +45,7 @@ fun BookingScreen(
     var promoCodeInput by remember { mutableStateOf("") }
     val activePromo by viewModel.activePromo.collectAsState()
     val promoError by viewModel.promoError.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.fetchServices()
@@ -97,7 +99,7 @@ fun BookingScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFFFFBF0))
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
                     .padding(bottom = 24.dp)
             ) {
                 Text(
@@ -206,6 +208,11 @@ fun BookingScreen(
 
                 Spacer(modifier = Modifier.height(64.dp))
             }
+
+            PlatformVerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                scrollState = scrollState
+            )
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

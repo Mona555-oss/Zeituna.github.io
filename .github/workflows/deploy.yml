@@ -31,4 +31,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: webApp/build/dist/wasmJs/productionExecutable
-          branch: main # This pushes the build results to your live branch (mona555-oss.github.io)
+          branch: main # This pushes the build results to your live branch (zeitun-a.com)

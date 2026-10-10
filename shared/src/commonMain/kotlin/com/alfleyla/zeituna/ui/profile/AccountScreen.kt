@@ -1,7 +1,9 @@
 package com.alfleyla.zeituna.ui.profile
 
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -30,6 +32,7 @@ fun AccountScreen(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showRequestReceivedDialog by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(deleteStatus) {
         deleteStatus?.let {
@@ -58,7 +61,7 @@ fun AccountScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(24.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Card(
@@ -88,6 +91,11 @@ fun AccountScreen(
                     Text("Delete Account", color = Color.White, fontSize = 16.sp)
                 }
             }
+
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(scrollState)
+            )
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = TurquoisePrimary)

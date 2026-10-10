@@ -20,7 +20,7 @@ import com.google.android.material.button.MaterialButton
 
 class ExpirationWarningDialog : DialogFragment() {
 
-    private val TERMS_URL = "https://mona555-oss.github.io/terms_of_service.html"
+    private val TERMS_URL = "https://zeitun-a.com/terms_of_service.html"
 
     override fun onCreateView(
         inflater: LayoutInflater,

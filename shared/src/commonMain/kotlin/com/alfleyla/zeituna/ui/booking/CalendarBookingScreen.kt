@@ -2,6 +2,7 @@ package com.alfleyla.zeituna.ui.booking
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -73,6 +75,8 @@ fun CalendarBookingScreen(
     val showTermsSection = remember(isPrepaid, profile) {
         !isPrepaid && profile?.agreed_to_purchase_terms != true
     }
+
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         val currentUrl = platformGetCurrentUrl()
@@ -183,149 +187,155 @@ fun CalendarBookingScreen(
                 )
             }
         ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .background(Color.Transparent)
-                    .verticalScroll(rememberScrollState())
-                    .padding(24.dp)
-            ) {
-                Text(
-                    text = "Choose a Date",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TurquoiseDark,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                DateSelectionCard(
-                    selectedDate = selectedDate,
-                    onDateSelected = { 
-                        selectedDate = it
-                        selectedTime = null
-                    },
-                    localTZ = localTZ
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Available Slots (${localTZ.id})",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TurquoiseDark,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                if (isLoading) {
-                    Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = TurquoisePrimary)
-                    }
-                } else if (slots.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Transparent)
+                        .verticalScroll(scrollState)
+                        .padding(24.dp)
+                ) {
                     Text(
-                        text = "No available slots for this date.",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                        color = TurquoiseDark
+                        text = "Choose a Date",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TurquoiseDark,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
-                } else {
-                    TimeSlotGrid(
-                        slots = slots,
+
+                    DateSelectionCard(
                         selectedDate = selectedDate,
-                        selectedTime = selectedTime,
-                        onTimeSelected = { selectedTime = it },
+                        onDateSelected = { 
+                            selectedDate = it
+                            selectedTime = null
+                        },
                         localTZ = localTZ
                     )
-                }
 
-                if (showTermsSection) {
                     Spacer(modifier = Modifier.height(24.dp))
-                    TermsSection(
-                        agreed = agreedToTerms,
-                        onAgreedChange = { agreedToTerms = it }
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Button(
-                    onClick = {
-                        val bId = service.bookitit_service_id
-                        val sId = service.id
-                        val time = selectedTime
-                        
-                        if (bId != null && sId != null && time != null) {
-                            val marginCheck = viewModel.validateSchedulingMargin(selectedDate.toString(), time)
-                            if (marginCheck.isFailure) {
-                                showMarginDialog = true
-                                return@Button
-                            }
-
-                            if (isPrepaid) {
-                                viewModel.schedulePackageLesson(
-                                    bookititId = bId,
-                                    bookingId = existingBookingId!!,
-                                    date = selectedDate.toString(),
-                                    time = time,
-                                    duration = service.duration
-                                )
-                            } else {
-                                if (showTermsSection && agreedToTerms) {
-                                    viewModel.updatePurchaseAgreement()
-                                }
-                                
-                                platformPutSessionData("pending_date", selectedDate.toString())
-                                platformPutSessionData("pending_time", time)
-                                platformPutSessionData("pending_bid", bId)
-                                platformPutSessionData("pending_sid", sId)
-                                
-                                val businessEmail = "mona@silentframes.net"
-                                val currentPrice = freshServiceDetails?.price ?: service.price
-                                val currentName = freshServiceDetails?.course_name ?: service.course_name
-                                
-                                var shortName = currentName.filter { it.isLetterOrDigit() || it.isWhitespace() }.take(20).trim()
-                                if (shortName.isEmpty()) shortName = "Lesson"
-                                
-                                val totalCents = (currentPrice * 100.0).roundToInt()
-                                val formattedAmount = "${totalCents / 100}.${(totalCents % 100).toString().padStart(2, '0')}"
-                                
-                                val baseUrl = platformGetCurrentUrl().substringBefore("?")
-                                val returnUrl = if (baseUrl.endsWith("/")) "${baseUrl}?payment=success" else "$baseUrl/?payment=success"
-                                
-                                val paypalUrl = "https://www.paypal.com/cgi-bin/webscr?" +
-                                        "cmd=_xclick" +
-                                        "&business=${businessEmail.encodeURLParameter()}" +
-                                        "&item_name=${shortName.encodeURLParameter()}" +
-                                        "&amount=${formattedAmount.encodeURLParameter()}" +
-                                        "&currency_code=USD" +
-                                        "&no_shipping=1" +
-                                        "&return=${returnUrl.encodeURLParameter()}" +
-                                        "&rm=1"
-                                
-                                platformOpenUrl(paypalUrl)
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    enabled = selectedTime != null && (!showTermsSection || agreedToTerms) && !isLoading,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(if (isPrepaid) "Confirm Schedule" else "Pay with PayPal", color = Color.White, fontSize = 18.sp)
-                }
-
-                if (bookingStatus?.isFailure == true) {
-                    val errorMsg = bookingStatus?.exceptionOrNull()?.message ?: "Booking failed"
                     Text(
-                        text = errorMsg,
-                        color = Color.Red,
-                        modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        text = "Available Slots (${localTZ.id})",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TurquoiseDark,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
+
+                    if (isLoading) {
+                        Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = TurquoisePrimary)
+                        }
+                    } else if (slots.isEmpty()) {
+                        Text(
+                            text = "No available slots for this date.",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                            color = TurquoiseDark
+                        )
+                    } else {
+                        TimeSlotGrid(
+                            slots = slots,
+                            selectedDate = selectedDate,
+                            selectedTime = selectedTime,
+                            onTimeSelected = { selectedTime = it },
+                            localTZ = localTZ
+                        )
+                    }
+
+                    if (showTermsSection) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        TermsSection(
+                            agreed = agreedToTerms,
+                            onAgreedChange = { agreedToTerms = it }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Button(
+                        onClick = {
+                            val bId = service.bookitit_service_id
+                            val sId = service.id
+                            val time = selectedTime
+                            
+                            if (bId != null && sId != null && time != null) {
+                                val marginCheck = viewModel.validateSchedulingMargin(selectedDate.toString(), time)
+                                if (marginCheck.isFailure) {
+                                    showMarginDialog = true
+                                    return@Button
+                                }
+
+                                if (isPrepaid) {
+                                    viewModel.schedulePackageLesson(
+                                        bookititId = bId,
+                                        bookingId = existingBookingId!!,
+                                        date = selectedDate.toString(),
+                                        time = time,
+                                        duration = service.duration
+                                    )
+                                } else {
+                                    if (showTermsSection && agreedToTerms) {
+                                        viewModel.updatePurchaseAgreement()
+                                    }
+                                    
+                                    platformPutSessionData("pending_date", selectedDate.toString())
+                                    platformPutSessionData("pending_time", time)
+                                    platformPutSessionData("pending_bid", bId)
+                                    platformPutSessionData("pending_sid", sId)
+                                    
+                                    val businessEmail = "mona@silentframes.net"
+                                    val currentPrice = freshServiceDetails?.price ?: service.price
+                                    val currentName = freshServiceDetails?.course_name ?: service.course_name
+                                    
+                                    var shortName = currentName.filter { it.isLetterOrDigit() || it.isWhitespace() }.take(20).trim()
+                                    if (shortName.isEmpty()) shortName = "Lesson"
+                                    
+                                    val totalCents = (currentPrice * 100.0).roundToInt()
+                                    val formattedAmount = "${totalCents / 100}.${(totalCents % 100).toString().padStart(2, '0')}"
+                                    
+                                    val baseUrl = platformGetCurrentUrl().substringBefore("?")
+                                    val returnUrl = if (baseUrl.endsWith("/")) "${baseUrl}?payment=success" else "$baseUrl/?payment=success"
+                                    
+                                    val paypalUrl = "https://www.paypal.com/cgi-bin/webscr?" +
+                                            "cmd=_xclick" +
+                                            "&business=${businessEmail.encodeURLParameter()}" +
+                                            "&item_name=${shortName.encodeURLParameter()}" +
+                                            "&amount=${formattedAmount.encodeURLParameter()}" +
+                                            "&currency_code=USD" +
+                                            "&no_shipping=1" +
+                                            "&return=${returnUrl.encodeURLParameter()}" +
+                                            "&rm=1"
+                                    
+                                    platformOpenUrl(paypalUrl)
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        enabled = selectedTime != null && (!showTermsSection || agreedToTerms) && !isLoading,
+                        colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(if (isPrepaid) "Confirm Schedule" else "Pay with PayPal", color = Color.White, fontSize = 18.sp)
+                    }
+
+                    if (bookingStatus?.isFailure == true) {
+                        val errorMsg = bookingStatus?.exceptionOrNull()?.message ?: "Booking failed"
+                        Text(
+                            text = errorMsg,
+                            color = Color.Red,
+                            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(64.dp))
                 }
-                
-                Spacer(modifier = Modifier.height(64.dp))
+
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(scrollState)
+                )
             }
         }
     }
@@ -479,44 +489,52 @@ fun TermsSection(agreed: Boolean, onAgreedChange: (Boolean) -> Unit) {
 
 @Composable
 fun BookingSuccessScreen(onGoToProfile: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFFBF0))
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            Icons.Default.CheckCircle,
-            contentDescription = null,
-            modifier = Modifier.size(100.dp),
-            tint = TurquoisePrimary
-        )
-        Text(
-            text = "Booking Confirmed!",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = TurquoiseDark,
-            modifier = Modifier.padding(top = 24.dp)
-        )
-        Text(
-            text = "Your lesson has been successfully scheduled and added to your profile.",
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp),
-            color = Color.Black
-        )
-        Button(
-            onClick = onGoToProfile,
+    val scrollState = rememberScrollState()
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
-            shape = RoundedCornerShape(8.dp)
+                .fillMaxSize()
+                .background(Color(0xFFFFFBF0))
+                .verticalScroll(scrollState)
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Go to My Profile", color = Color.White)
+            Icon(
+                Icons.Default.CheckCircle,
+                contentDescription = null,
+                modifier = Modifier.size(100.dp),
+                tint = TurquoisePrimary
+            )
+            Text(
+                text = "Booking Confirmed!",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = TurquoiseDark,
+                modifier = Modifier.padding(top = 24.dp)
+            )
+            Text(
+                text = "Your lesson has been successfully scheduled and added to your profile.",
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp),
+                color = Color.Black
+            )
+            Button(
+                onClick = onGoToProfile,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Go to My Profile", color = Color.White)
+            }
         }
+        VerticalScrollbar(
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+            adapter = rememberScrollbarAdapter(scrollState)
+        )
     }
 }

@@ -1,5 +1,10 @@
 package com.alfleyla.zeituna.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.lazy.LazyListState
+
 expect fun base64Encode(input: ByteArray): String
 
 expect fun hmacMd5(key: ByteArray, data: ByteArray): ByteArray
@@ -22,3 +27,15 @@ expect fun platformGetTimeZoneId(): String
  * Opens a platform-specific file picker and returns the file bytes and name.
  */
 expect fun platformPickFile(allowedExtensions: List<String>, onResult: (ByteArray?, String?) -> Unit)
+
+@Composable
+expect fun PlatformVerticalScrollbar(
+    modifier: Modifier,
+    scrollState: ScrollState
+)
+
+@Composable
+expect fun PlatformVerticalScrollbar(
+    modifier: Modifier,
+    lazyListState: LazyListState
+)

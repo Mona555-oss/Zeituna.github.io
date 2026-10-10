@@ -151,7 +151,7 @@ class CalendarBookingViewModel : ViewModel() {
             val lessonInstant = lessonDT.toInstant(tz)
             val now = Clock.System.now()
             val diff = lessonInstant - now
-            if (diff.inWholeHours < 20) {
+            if (diff.inWholeHours < 2) {
                 Result.failure(Exception("Lessons must be scheduled at least 20 hours in advance."))
             } else { Result.success(true) }
         } catch (e: Throwable) { 

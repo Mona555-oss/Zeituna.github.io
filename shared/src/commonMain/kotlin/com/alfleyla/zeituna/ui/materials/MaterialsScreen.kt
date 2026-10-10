@@ -1,12 +1,15 @@
 package com.alfleyla.zeituna.ui.materials
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -45,6 +48,7 @@ fun MaterialsScreen(
     var promoToDelete by remember { mutableStateOf<PromoCode?>(null) }
     
     val isTeacher = profile?.role == "teacher"
+    val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
         viewModel.fetchMaterials()
@@ -63,40 +67,48 @@ fun MaterialsScreen(
             )
         }
     ) { padding ->
-        if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = TurquoisePrimary)
-            }
-        } else if (materials.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No materials available yet.", color = Color.Gray)
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
-            ) {
-                materials.forEach { (language, list) ->
-                    item {
-                        Text(
-                            text = language,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TurquoiseDark,
-                            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-                        )
-                    }
-                    items(list) { promo ->
-                        val isSolved = profile?.solved_quizzes?.contains(promo.id.toString()) == true
-                        MaterialCard(
-                            promo = promo,
-                            isUsed = isSolved,
-                            isTeacher = isTeacher,
-                            onClick = { selectedPromo = promo },
-                            onDelete = { promoToDelete = promo }
-                        )
-                    }
+        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+            if (isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = TurquoisePrimary)
                 }
-                item { Spacer(Modifier.height(32.dp)) }
+            } else if (materials.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No materials available yet.", color = Color.Gray)
+                }
+            } else {
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier.fillMaxSize().padding(16.dp)
+                ) {
+                    materials.forEach { (language, list) ->
+                        item {
+                            Text(
+                                text = language,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TurquoiseDark,
+                                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                            )
+                        }
+                        items(list) { promo ->
+                            val isSolved = profile?.solved_quizzes?.contains(promo.id.toString()) == true
+                            MaterialCard(
+                                promo = promo,
+                                isUsed = isSolved,
+                                isTeacher = isTeacher,
+                                onClick = { selectedPromo = promo },
+                                onDelete = { promoToDelete = promo }
+                            )
+                        }
+                    }
+                    item { Spacer(Modifier.height(32.dp)) }
+                }
+
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(lazyListState)
+                )
             }
         }
 
@@ -305,6 +317,7 @@ fun PromoQuizDialog(
     
     var isCorrect by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -312,101 +325,108 @@ fun PromoQuizDialog(
             elevation = 8.dp,
             modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp).verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = promo.subject ?: "",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TurquoiseDark,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                VideoPlayer(url = promo.video_url ?: "", modifier = Modifier.fillMaxWidth().height(180.dp).clip(RoundedCornerShape(8.dp)))
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (isCorrect) {
+            Box {
+                Column(
+                    modifier = Modifier.padding(20.dp).verticalScroll(scrollState),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
-                        text = "Correct! 🎉\n\nUse code: ${promo.code ?: ""}\nto get $${promo.discount} off!",
-                        fontSize = 18.sp,
+                        text = promo.subject ?: "",
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = Color(0xFF4CAF50),
-                        modifier = Modifier.padding(vertical = 24.dp)
+                        color = TurquoiseDark,
+                        textAlign = TextAlign.Center
                     )
-                } else if (isAlreadyUsed) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(48.dp))
-                    Text(
-                        text = "You have already solved the quiz for this video.\n\nCode: ${promo.code ?: ""}",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 16.dp),
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold
-                    )
-                } else {
-                    questions.forEachIndexed { index, question ->
-                        QuizOptionGroup(
-                            question = question,
-                            options = optionsForDisplayedQuestions.getOrNull(index) ?: emptyList(),
-                            selectedOption = selections[index],
-                            onOptionSelected = { 
-                                showError = false
-                                selections[index] = it 
-                            }
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    VideoPlayer(url = promo.video_url ?: "", modifier = Modifier.fillMaxWidth().height(180.dp).clip(RoundedCornerShape(8.dp)))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    if (showError) {
+                    if (isCorrect) {
                         Text(
-                            "Some answers are incorrect. Please check again.",
-                            color = Color.Red,
-                            fontSize = 13.sp,
-                            modifier = Modifier.padding(top = 8.dp)
+                            text = "Correct! 🎉\n\nUse code: ${promo.code ?: ""}\nto get $${promo.discount} off!",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFF4CAF50),
+                            modifier = Modifier.padding(vertical = 24.dp)
                         )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = {
-                            val allCorrect = questions.indices.all { i ->
-                                val userSelectionText = selections[i]
-                                val currentQuestionOptions = optionsForDisplayedQuestions.getOrNull(i) ?: emptyList()
-                                
-                                val selectedIndexInOptions = currentQuestionOptions.indexOf(userSelectionText)
-                                val selectedLetter = when (selectedIndexInOptions) {
-                                    0 -> "A"
-                                    1 -> "B"
-                                    2 -> "C"
-                                    else -> ""
+                    } else if (isAlreadyUsed) {
+                        Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(48.dp))
+                        Text(
+                            text = "You have already solved the quiz for this video.\n\nCode: ${promo.code ?: ""}",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 16.dp),
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } else {
+                        questions.forEachIndexed { index, question ->
+                            QuizOptionGroup(
+                                question = question,
+                                options = optionsForDisplayedQuestions.getOrNull(index) ?: emptyList(),
+                                selectedOption = selections[index],
+                                onOptionSelected = { 
+                                    showError = false
+                                    selections[index] = it 
                                 }
-                                
-                                val correctLetter = answers.getOrNull(i)?.trim() ?: ""
-                                platformLog("Quiz", "Q${i+1}: Selected $selectedLetter ('$userSelectionText'), Expected $correctLetter")
-                                
-                                selectedLetter.equals(correctLetter, ignoreCase = true)
-                            }
+                            )
+                        }
 
-                            if (allCorrect) {
-                                isCorrect = true
-                                onClaimed()
-                            } else {
-                                showError = true
-                            }
-                        },
-                        enabled = selections.all { it != null } && questions.isNotEmpty(),
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Verify Answers", color = Color.White)
+                        if (showError) {
+                            Text(
+                                "Some answers are incorrect. Please check again.",
+                                color = Color.Red,
+                                fontSize = 13.sp,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Button(
+                            onClick = {
+                                val allCorrect = questions.indices.all { i ->
+                                    val userSelectionText = selections[i]
+                                    val currentQuestionOptions = optionsForDisplayedQuestions.getOrNull(i) ?: emptyList()
+                                    
+                                    val selectedIndexInOptions = currentQuestionOptions.indexOf(userSelectionText)
+                                    val selectedLetter = when (selectedIndexInOptions) {
+                                        0 -> "A"
+                                        1 -> "B"
+                                        2 -> "C"
+                                        else -> ""
+                                    }
+                                    
+                                    val correctLetter = answers.getOrNull(i)?.trim() ?: ""
+                                    platformLog("Quiz", "Q${i+1}: Selected $selectedLetter ('$userSelectionText'), Expected $correctLetter")
+                                    
+                                    selectedLetter.equals(correctLetter, ignoreCase = true)
+                                }
+
+                                if (allCorrect) {
+                                    isCorrect = true
+                                    onClaimed()
+                                } else {
+                                    showError = true
+                                }
+                            },
+                            enabled = selections.all { it != null } && questions.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth().height(48.dp),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Verify Answers", color = Color.White)
+                        }
+                    }
+                    TextButton(onClick = onDismiss, modifier = Modifier.padding(top = 8.dp)) {
+                        Text("Close", color = Color.Gray)
                     }
                 }
-                TextButton(onClick = onDismiss, modifier = Modifier.padding(top = 8.dp)) {
-                    Text("Close", color = Color.Gray)
-                }
+
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(vertical = 12.dp),
+                    adapter = rememberScrollbarAdapter(scrollState)
+                )
             }
         }
     }

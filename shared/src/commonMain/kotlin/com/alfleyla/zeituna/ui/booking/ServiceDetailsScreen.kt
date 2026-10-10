@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.alfleyla.zeituna.data.models.LessonService
 import com.alfleyla.zeituna.theme.TurquoiseDark
 import com.alfleyla.zeituna.theme.TurquoisePrimary
+import com.alfleyla.zeituna.utils.PlatformVerticalScrollbar
 import org.jetbrains.compose.resources.painterResource
 import silentspace.shared.generated.resources.*
 import silentspace.shared.generated.resources.Res
@@ -34,6 +35,8 @@ fun ServiceDetailsScreen(
     onBack: () -> Unit,
     onConfirmBuy: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFFFFBF0))) {
         val isStyle = service.course_name.contains("MSA", ignoreCase = true)
         val bgResource = if (isStyle) Res.drawable.style else Res.drawable.bg
@@ -65,88 +68,94 @@ fun ServiceDetailsScreen(
                 )
             }
         ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(24.dp)
-            ) {
-                Text(
-                    text = service.displayLabel,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TurquoiseDark,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                Text(
-                    text = service.course_name,
-                    fontSize = 18.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-
-                Text(
-                    text = "Expiration Policy",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-
-                Text(
-                    text = "Expires in: ${service.validity_days ?: 30} days after purchase",
-                    fontSize = 16.sp,
-                    color = TurquoisePrimary,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-
-                Text(
-                    text = "All lessons included in this course must be scheduled and completed before the expiration date. Any unused lessons remaining after this date will become inactive and can no longer be scheduled.",
-                    fontSize = 12.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-
-                Text(
-                    text = "Description",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                Text(
-                    text = service.description ?: "No description available.",
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
-
-                Button(
-                    onClick = onConfirmBuy,
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
-                    shape = RoundedCornerShape(8.dp)
+            Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(24.dp)
                 ) {
-                    Text("Buy this Package", color = Color.White, fontSize = 18.sp)
-                }
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                if (service.course_name.contains("conversation", ignoreCase = true)) {
-                    Image(
-                        painter = painterResource(Res.drawable.conversation),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp),
-                        contentScale = ContentScale.Fit
+                    Text(
+                        text = service.displayLabel,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TurquoiseDark,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
+
+                    Text(
+                        text = service.course_name,
+                        fontSize = 18.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    Text(
+                        text = "Expiration Policy",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = "Expires in: ${service.validity_days ?: 30} days after purchase",
+                        fontSize = 16.sp,
+                        color = TurquoisePrimary,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = "All lessons included in this course must be scheduled and completed before the expiration date. Any unused lessons remaining after this date will become inactive and can no longer be scheduled.",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    Text(
+                        text = "Description",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    Text(
+                        text = service.description ?: "No description available.",
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 32.dp)
+                    )
+
+                    Button(
+                        onClick = onConfirmBuy,
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Buy this Package", color = Color.White, fontSize = 18.sp)
+                    }
+
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    if (service.course_name.contains("conversation", ignoreCase = true)) {
+                        Image(
+                            painter = painterResource(Res.drawable.conversation),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
-                
-                Spacer(modifier = Modifier.height(32.dp))
+
+                PlatformVerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    scrollState = scrollState
+                )
             }
         }
     }

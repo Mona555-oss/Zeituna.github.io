@@ -1,5 +1,11 @@
 package com.alfleyla.zeituna.utils
 
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.lazy.LazyListState
 import kotlinx.browser.window
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.asList
@@ -127,4 +133,20 @@ actual fun platformPickFile(allowedExtensions: List<String>, onResult: (ByteArra
         }
     }
     input.click()
+}
+
+@Composable
+actual fun PlatformVerticalScrollbar(modifier: Modifier, scrollState: ScrollState) {
+    VerticalScrollbar(
+        modifier = modifier,
+        adapter = rememberScrollbarAdapter(scrollState)
+    )
+}
+
+@Composable
+actual fun PlatformVerticalScrollbar(modifier: Modifier, lazyListState: LazyListState) {
+    VerticalScrollbar(
+        modifier = modifier,
+        adapter = rememberScrollbarAdapter(lazyListState)
+    )
 }
