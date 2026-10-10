@@ -1,8 +1,6 @@
 package com.alfleyla.zeituna.ui.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alfleyla.zeituna.profile.ProfileViewModel
+import com.alfleyla.zeituna.theme.TurquoisePrimary
+import com.alfleyla.zeituna.theme.TurquoiseDark
 import org.jetbrains.compose.resources.painterResource
 import silentspace.shared.generated.resources.Res
 import silentspace.shared.generated.resources.sub_icon
@@ -48,7 +48,6 @@ fun StudentDashboardScreen(
     val unscheduleMessage by viewModel.unscheduleMessage.collectAsState()
 
     var showMenu by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.loadProfileData()
@@ -57,14 +56,14 @@ fun StudentDashboardScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.primary,
+                backgroundColor = TurquoisePrimary,
                 contentPadding = PaddingValues(horizontal = 8.dp),
                 elevation = 4.dp
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Box(modifier = Modifier.align(Alignment.CenterStart)) {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = MaterialTheme.colors.onPrimary)
+                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
                         }
                         DropdownMenu(
                             expanded = showMenu,
@@ -75,20 +74,17 @@ fun StudentDashboardScreen(
                                 onNavigateToMaterials()
                             }) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.PlayArrow, contentDescription = null, tint = MaterialTheme.colors.primary)
+                                    Icon(Icons.Default.PlayArrow, contentDescription = null, tint = TurquoisePrimary)
                                     Spacer(Modifier.width(12.dp))
                                     Text("Materials")
                                 }
                             }
-                            DropdownMenuItem(
-                                enabled = profile != null,
-                                onClick = {
-                                    showMenu = false
-                                    onNavigateToAccount()
-                                }
-                            ) {
+                            DropdownMenuItem(onClick = {
+                                showMenu = false
+                                onNavigateToAccount()
+                            }) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.Person, contentDescription = null, tint = MaterialTheme.colors.primary)
+                                    Icon(Icons.Default.Person, contentDescription = null, tint = TurquoisePrimary)
                                     Spacer(Modifier.width(12.dp))
                                     Text("My Account")
                                 }
@@ -99,15 +95,14 @@ fun StudentDashboardScreen(
                     Image(
                         painter = painterResource(Res.drawable.sub_icon),
                         contentDescription = null,
-                        modifier = Modifier.height(60.dp).align(Alignment.Center)
+                        modifier = Modifier.height(40.dp).align(Alignment.Center)
                     )
 
                     TextButton(
                         onClick = onNavigateToAccount,
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                        enabled = profile != null
+                        modifier = Modifier.align(Alignment.CenterEnd)
                     ) {
-                        Text("My Account", color = MaterialTheme.colors.onPrimary, fontSize = 12.sp)
+                        Text("My Account", color = Color.White, fontSize = 12.sp)
                     }
                 }
             }
@@ -118,41 +113,35 @@ fun StudentDashboardScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(rememberScrollState())
             ) {
-                // User Info Card
-                AnimatedVisibility(
-                    visible = profile != null,
-                    enter = fadeIn(),
-                    exit = fadeOut()
+                // Branded User Info Card
+                Card(
+                    elevation = 2.dp,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
                 ) {
-                    Card(
-                        elevation = 2.dp,
-                        shape = MaterialTheme.shapes.medium,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                    Row(
+                        modifier = Modifier.padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier.padding(20.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(Res.drawable.sub_sub_icon),
-                                contentDescription = null,
-                                modifier = Modifier.size(80.dp).padding(end = 16.dp)
+                        Image(
+                            painter = painterResource(Res.drawable.sub_sub_icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp).padding(end = 16.dp)
+                        )
+                        Column {
+                            Text(
+                                text = profile?.full_name ?: "User Name",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TurquoiseDark
                             )
-                            Column {
-                                Text(
-                                    text = profile?.full_name ?: "User",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colors.onSurface
-                                )
-                                Text(
-                                    text = profile?.email ?: "",
-                                    fontSize = 14.sp,
-                                    color = MaterialTheme.colors.primary
-                                )
-                            }
+                            Text(
+                                text = profile?.email ?: "user@example.com",
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
                         }
                     }
                 }
@@ -161,29 +150,27 @@ fun StudentDashboardScreen(
                 Button(
                     onClick = onBuyClick,
                     modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
                     shape = MaterialTheme.shapes.medium,
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    Text("Book a Lesson / Course", color = MaterialTheme.colors.onPrimary, fontSize = 16.sp)
+                    Text("Book a Lesson / Course", color = Color.White, fontSize = 16.sp)
                 }
 
                 // Collapsible Sections
                 CollapsibleSection(title = "Booked Courses") {
                     if (activePackages.isEmpty()) {
-                        Text("No active Courses", modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colors.onBackground)
+                        Text("No active Courses", modifier = Modifier.padding(vertical = 8.dp))
                     } else {
                         activePackages.forEach { pkg ->
-                            PackageItem(pkg, onClick = { 
-                                if (pkg.service != null) onPackageClick(pkg)
-                            })
+                            PackageItem(pkg, onClick = { onPackageClick(pkg) })
                         }
                     }
                 }
 
                 CollapsibleSection(title = "Upcoming Lessons", initiallyExpanded = true) {
                     if (upcomingLessons.isEmpty()) {
-                        Text("No upcoming lessons", modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colors.onBackground)
+                        Text("No upcoming lessons", modifier = Modifier.padding(vertical = 8.dp))
                     } else {
                         upcomingLessons.forEach { lesson ->
                             LessonItem(
@@ -197,7 +184,7 @@ fun StudentDashboardScreen(
 
                 CollapsibleSection(title = "Completed Lessons") {
                     if (completedLessons.isEmpty()) {
-                        Text("No completed lessons", modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colors.onBackground)
+                        Text("No completed lessons", modifier = Modifier.padding(vertical = 8.dp))
                     } else {
                         completedLessons.forEach { lesson ->
                             LessonItem(event = lesson)
@@ -207,7 +194,7 @@ fun StudentDashboardScreen(
 
                 CollapsibleSection(title = "Unscheduled Lessons") {
                     if (unscheduledLessons.isEmpty()) {
-                        Text("No unscheduled lessons", modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colors.onBackground)
+                        Text("No unscheduled lessons", modifier = Modifier.padding(vertical = 8.dp))
                     } else {
                         unscheduledLessons.forEach { lesson ->
                             LessonItem(event = lesson)
@@ -215,31 +202,25 @@ fun StudentDashboardScreen(
                     }
                 }
 
-                // Logout Button
+                // Logout Button (at bottom)
                 Button(
                     onClick = {
                         viewModel.logout()
                         onLogout()
                     },
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
                     shape = MaterialTheme.shapes.medium,
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    Text("Logout", color = MaterialTheme.colors.onPrimary, fontSize = 16.sp)
+                    Text("Logout", color = Color.White, fontSize = 16.sp)
                 }
 
                 Spacer(modifier = Modifier.height(64.dp))
             }
 
-            // Visible Scrollbar
-            ZeitunaScrollbar(
-                scrollState = scrollState,
-                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)
-            )
-
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = MaterialTheme.colors.primary)
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             
             // Dialogs
@@ -256,15 +237,15 @@ fun StudentDashboardScreen(
             if (showUnscheduleWarning) {
                 UnscheduleWarningDialog(
                     message = "Lessons canceled with less than 20 hours notice cannot be rescheduled and will be marked as completed.",
-                    onConfirm = { viewModel.clearUnscheduleWarning() }
+                    onConfirm = { 
+                        viewModel.clearUnscheduleWarning()
+                    }
                 )
             }
             
             unscheduleMessage?.let { msg ->
                 AlertDialog(
                     onDismissRequest = { viewModel.clearUnscheduleMessage() },
-                    backgroundColor = MaterialTheme.colors.surface,
-                    contentColor = MaterialTheme.colors.onSurface,
                     title = { Text("Success") },
                     text = { Text(msg) },
                     confirmButton = {

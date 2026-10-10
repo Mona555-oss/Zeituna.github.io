@@ -9,9 +9,6 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.InternalResourceApi
 
 private object CommonMainDrawable0 {
-  public val Cinema: DrawableResource by 
-      lazy { init_Cinema() }
-
   public val app_icon: DrawableResource by 
       lazy { init_app_icon() }
 
@@ -45,7 +42,6 @@ private object CommonMainDrawable0 {
 
 @InternalResourceApi
 internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, DrawableResource>) {
-  map.put("Cinema", CommonMainDrawable0.Cinema)
   map.put("app_icon", CommonMainDrawable0.app_icon)
   map.put("bg", CommonMainDrawable0.bg)
   map.put("conversation", CommonMainDrawable0.conversation)
@@ -57,17 +53,6 @@ internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, Drawab
   map.put("sub_icon", CommonMainDrawable0.sub_icon)
   map.put("sub_sub_icon", CommonMainDrawable0.sub_sub_icon)
 }
-
-internal val Res.drawable.Cinema: DrawableResource
-  get() = CommonMainDrawable0.Cinema
-
-private fun init_Cinema(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:Cinema",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/silentspace.shared.generated.resources/drawable/Cinema.png", -1, -1),
-    )
-)
 
 internal val Res.drawable.app_icon: DrawableResource
   get() = CommonMainDrawable0.app_icon

@@ -26,7 +26,6 @@ import com.alfleyla.zeituna.booking.BookingViewModel
 import com.alfleyla.zeituna.data.models.LessonService
 import com.alfleyla.zeituna.theme.TurquoisePrimary
 import com.alfleyla.zeituna.theme.TurquoiseDark
-import com.alfleyla.zeituna.ui.dashboard.ZeitunaScrollbar
 import org.jetbrains.compose.resources.painterResource
 import silentspace.shared.generated.resources.Res
 import silentspace.shared.generated.resources.sub_icon
@@ -45,17 +44,16 @@ fun BookingScreen(
     var promoCodeInput by remember { mutableStateOf("") }
     val activePromo by viewModel.activePromo.collectAsState()
     val promoError by viewModel.promoError.collectAsState()
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.fetchServices()
     }
 
     Scaffold(
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = Color(0xFF3DCFEBE8),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.primary,
+                backgroundColor = TurquoisePrimary,
                 contentPadding = PaddingValues(0.dp),
                 elevation = 4.dp
             ) {
@@ -64,9 +62,9 @@ fun BookingScreen(
                         onClick = onLogout,
                         modifier = Modifier.align(Alignment.CenterStart)
                     ) {
-                        Icon(Icons.Default.Close, contentDescription = null, tint = MaterialTheme.colors.onPrimary, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.Close, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text("Logout", color = MaterialTheme.colors.onPrimary, fontSize = 12.sp)
+                        Text("Logout", color = Color.White, fontSize = 12.sp)
                     }
 
                     Image(
@@ -82,9 +80,9 @@ fun BookingScreen(
                         },
                         modifier = Modifier.align(Alignment.CenterEnd)
                     ) {
-                        Text("Profile", color = MaterialTheme.colors.onPrimary, fontSize = 12.sp)
+                        Text("Profile", color = Color.White, fontSize = 12.sp)
                         Spacer(Modifier.width(4.dp))
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = MaterialTheme.colors.onPrimary, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                     }
                 }
             }
@@ -98,15 +96,15 @@ fun BookingScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .verticalScroll(scrollState)
+                    .background(Color(0xFFFFFBF0))
+                    .verticalScroll(rememberScrollState())
                     .padding(bottom = 24.dp)
             ) {
                 Text(
                     text = "Choose your Course",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary,
+                    color = TurquoisePrimary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp, bottom = 16.dp),
@@ -116,23 +114,23 @@ fun BookingScreen(
                 // Promo Center Header
                 Card(
                     elevation = 0.dp,
-                    backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.05f),
+                    backgroundColor = TurquoisePrimary.copy(alpha = 0.05f),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colors.primary.copy(alpha = 0.2f))
+                    border = BorderStroke(1.dp, TurquoisePrimary.copy(alpha = 0.2f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Don't have a discount yet?", fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onSurface)
-                        Text("Watch a short video to earn one!", fontSize = 12.sp, textAlign = TextAlign.Center, color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f))
+                        Text("Don't have a discount yet?", fontWeight = FontWeight.Bold, color = TurquoiseDark)
+                        Text("Watch a short video and answer 3 questions to earn one!", fontSize = 12.sp, textAlign = TextAlign.Center)
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(
                             onClick = onNavigateToMaterials,
-                            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colors.onPrimary, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Default.Star, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Earn a Discount", color = MaterialTheme.colors.onPrimary)
+                            Text("Earn a Discount", color = Color.White)
                         }
                     }
                 }
@@ -147,7 +145,7 @@ fun BookingScreen(
 
                 services.forEach { service ->
                     val isMatched = activePromo != null && (activePromo!!.code == promoCodeInput.trim().uppercase())
-                    val discount = if (isMatched && service.count > 1) activePromo!!.discount else 0.0
+                    val discount = if (isMatched) activePromo!!.discount else 0.0
                     
                     ServiceItem(
                         service = service,
@@ -160,7 +158,6 @@ fun BookingScreen(
                 Card(
                     elevation = 2.dp,
                     shape = RoundedCornerShape(12.dp),
-                    backgroundColor = MaterialTheme.colors.surface,
                     modifier = Modifier.fillMaxWidth().padding(16.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -175,12 +172,7 @@ fun BookingScreen(
                                 modifier = Modifier.weight(1f),
                                 singleLine = true,
                                 isError = promoError != null,
-                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                    focusedBorderColor = MaterialTheme.colors.primary,
-                                    textColor = MaterialTheme.colors.onSurface,
-                                    cursorColor = MaterialTheme.colors.primary,
-                                    unfocusedBorderColor = MaterialTheme.colors.onSurface.copy(alpha = 0.4f)
-                                )
+                                colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = TurquoisePrimary)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Button(
@@ -196,14 +188,14 @@ fun BookingScreen(
                         if (promoError != null) {
                             Text(
                                 text = promoError!!,
-                                color = Color(0xFFCF6679),
+                                color = Color.Red,
                                 fontSize = 12.sp,
                                 modifier = Modifier.padding(top = 8.dp, start = 4.dp)
                             )
                         } else if (activePromo != null) {
                             Text(
-                                text = "🎉 Promo Applied: $${activePromo!!.discount} off packages!",
-                                color = Color(0xFF81C784),
+                                text = "🎉 Promo Applied: $${activePromo!!.discount} off!",
+                                color = Color(0xFF4CAF50),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 8.dp, start = 4.dp)
@@ -215,14 +207,8 @@ fun BookingScreen(
                 Spacer(modifier = Modifier.height(64.dp))
             }
 
-            // Interactive Scrollbar
-            ZeitunaScrollbar(
-                scrollState = scrollState,
-                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)
-            )
-
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = MaterialTheme.colors.primary)
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }
@@ -242,8 +228,8 @@ fun ServiceItem(
     Card(
         elevation = 4.dp,
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = MaterialTheme.colors.surface,
-        border = BorderStroke(1.dp, MaterialTheme.colors.primary.copy(alpha = 0.5f)),
+        backgroundColor = Color(0xFFFFFBF0),
+        border = BorderStroke(1.dp, TurquoisePrimary),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -254,8 +240,8 @@ fun ServiceItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = service.displayLabel, fontSize = 14.sp, color = MaterialTheme.colors.primary)
-                Text(text = service.course_name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onSurface)
+                Text(text = service.displayLabel, fontSize = 14.sp, color = TurquoiseDark)
+                Text(text = service.course_name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             }
 
             Column(horizontalAlignment = Alignment.End) {
@@ -263,7 +249,7 @@ fun ServiceItem(
                     Text(
                         text = "$${service.price}",
                         fontSize = 14.sp,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f),
+                        color = Color.Gray,
                         style = androidx.compose.ui.text.TextStyle(textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough)
                     )
                 }
@@ -271,7 +257,7 @@ fun ServiceItem(
                     text = "$$finalPrice",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (appliedDiscount > 0) Color(0xFF81C784) else MaterialTheme.colors.primary
+                    color = if (appliedDiscount > 0) Color(0xFF4CAF50) else TurquoisePrimary
                 )
             }
         }

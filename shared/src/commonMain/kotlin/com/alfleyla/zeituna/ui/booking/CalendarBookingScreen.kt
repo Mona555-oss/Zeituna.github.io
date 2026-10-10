@@ -31,7 +31,6 @@ import com.alfleyla.zeituna.data.models.BookititSlot
 import com.alfleyla.zeituna.data.models.LessonService
 import com.alfleyla.zeituna.theme.TurquoisePrimary
 import com.alfleyla.zeituna.theme.TurquoiseDark
-import com.alfleyla.zeituna.ui.dashboard.ZeitunaScrollbar
 import com.alfleyla.zeituna.utils.*
 import io.ktor.http.*
 import kotlinx.datetime.*
@@ -57,7 +56,6 @@ fun CalendarBookingScreen(
     
     val localTZ = remember { DateTimeUtils.safeTimeZone(null) }
     val isPrepaid = existingBookingId != null
-    val scrollState = rememberScrollState()
 
     val safeNowDate = remember(localTZ) {
         try {
@@ -74,6 +72,34 @@ fun CalendarBookingScreen(
 
     val showTermsSection = remember(isPrepaid, profile) {
         !isPrepaid && profile?.agreed_to_purchase_terms != true
+    }
+
+    LaunchedEffect(Unit) {
+        val currentUrl = platformGetCurrentUrl()
+        if (currentUrl.contains("payment=success")) {
+            val savedDate = platformGetSessionData("pending_date")
+            val savedTime = platformGetSessionData("pending_time")
+            val savedBId = platformGetSessionData("pending_bid")
+            val savedSId = platformGetSessionData("pending_sid")
+            
+            if (!savedDate.isNullOrBlank() && !savedTime.isNullOrBlank()) {
+                platformPutSessionData("pending_date", "")
+                platformPutSessionData("pending_time", "")
+                platformClearUrlParams()
+                
+                selectedDate = LocalDate.parse(savedDate)
+                selectedTime = savedTime
+                
+                viewModel.confirmBooking(
+                    bookititId = savedBId ?: service.bookitit_service_id ?: "",
+                    supabaseId = savedSId ?: service.id ?: "",
+                    date = savedDate,
+                    time = savedTime,
+                    duration = service.duration,
+                    lessonCount = service.count
+                )
+            }
+        }
     }
 
     LaunchedEffect(selectedDate) {
@@ -95,38 +121,37 @@ fun CalendarBookingScreen(
     if (showMarginDialog) {
         AlertDialog(
             onDismissRequest = { showMarginDialog = false },
-            backgroundColor = MaterialTheme.colors.surface,
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(8.dp))
-                    Text("Scheduling Rule", color = MaterialTheme.colors.onSurface)
+                    Text("Scheduling Rule")
                 }
             },
             text = {
                 Column {
-                    Text("Lessons have to be booked in 20 hours or more in advance. Please choose a later time slot.", color = MaterialTheme.colors.onSurface)
+                    Text("Lessons have to be booked in 20 hours or more in advance. Please choose a later time slot.")
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = "Read our terms of service to know more.",
-                        color = MaterialTheme.colors.primary,
+                        color = TurquoisePrimary,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable {
-                            platformOpenUrl("./terms_of_service.html")
+                            platformOpenUrl("https://mona555-oss.github.io/terms_of_service.html")
                         }
                     )
                 }
             },
             confirmButton = {
                 TextButton(onClick = { showMarginDialog = false }) {
-                    Text("OK", color = MaterialTheme.colors.primary)
+                    Text("OK", color = TurquoisePrimary)
                 }
             },
             shape = RoundedCornerShape(12.dp)
         )
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFFFFBF0))) {
         val isStyle = service.course_name.contains("MSA", ignoreCase = true)
         val bgResource = if (isStyle) Res.drawable.style else Res.drawable.bg
         
@@ -144,170 +169,163 @@ fun CalendarBookingScreen(
             backgroundColor = Color.Transparent,
             topBar = {
                 TopAppBar(
-                    title = { Text(if (isPrepaid) "Schedule Lesson" else "Select Date and Time", color = MaterialTheme.colors.onPrimary) },
-                    backgroundColor = MaterialTheme.colors.primary,
+                    title = { Text(if (isPrepaid) "Schedule Lesson" else "Select Date and Time", color = Color.White) },
+                    backgroundColor = TurquoisePrimary,
                     navigationIcon = {
                         IconButton(onClick = {
                             viewModel.clearBookingStatus()
                             onBack()
                         }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colors.onPrimary)
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                         }
                     },
                     elevation = 4.dp
                 )
             }
         ) { padding ->
-            Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Transparent)
-                        .verticalScroll(scrollState)
-                        .padding(24.dp)
-                ) {
-                    Text(
-                        text = "Choose a Date",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .background(Color.Transparent)
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp)
+            ) {
+                Text(
+                    text = "Choose a Date",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TurquoiseDark,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
 
-                    DateSelectionCard(
+                DateSelectionCard(
+                    selectedDate = selectedDate,
+                    onDateSelected = { 
+                        selectedDate = it
+                        selectedTime = null
+                    },
+                    localTZ = localTZ
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Available Slots (${localTZ.id})",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TurquoiseDark,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                if (isLoading) {
+                    Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = TurquoisePrimary)
+                    }
+                } else if (slots.isEmpty()) {
+                    Text(
+                        text = "No available slots for this date.",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                        color = TurquoiseDark
+                    )
+                } else {
+                    TimeSlotGrid(
+                        slots = slots,
                         selectedDate = selectedDate,
-                        onDateSelected = { 
-                            selectedDate = it
-                            selectedTime = null
-                        },
+                        selectedTime = selectedTime,
+                        onTimeSelected = { selectedTime = it },
                         localTZ = localTZ
                     )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(
-                        text = "Available Slots (${localTZ.id})",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-
-                    if (isLoading) {
-                        Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(color = MaterialTheme.colors.primary)
-                        }
-                    } else if (slots.isEmpty()) {
-                        Text(
-                            text = "No available slots for this date.",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                            color = MaterialTheme.colors.onBackground
-                        )
-                    } else {
-                        TimeSlotGrid(
-                            slots = slots,
-                            selectedDate = selectedDate,
-                            selectedTime = selectedTime,
-                            onTimeSelected = { selectedTime = it },
-                            localTZ = localTZ
-                        )
-                    }
-
-                    if (showTermsSection) {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        TermsSection(
-                            agreed = agreedToTerms,
-                            onAgreedChange = { agreedToTerms = it }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    Button(
-                        onClick = {
-                            val bId = service.bookitit_service_id
-                            val sId = service.id
-                            val time = selectedTime
-                            
-                            if (bId != null && sId != null && time != null) {
-                                val marginCheck = viewModel.validateSchedulingMargin(selectedDate.toString(), time)
-                                if (marginCheck.isFailure) {
-                                    showMarginDialog = true
-                                    return@Button
-                                }
-
-                                if (isPrepaid) {
-                                    viewModel.schedulePackageLesson(
-                                        bookititId = bId,
-                                        bookingId = existingBookingId!!,
-                                        date = selectedDate.toString(),
-                                        time = time,
-                                        duration = service.duration
-                                    )
-                                } else {
-                                    if (showTermsSection && agreedToTerms) {
-                                        viewModel.updatePurchaseAgreement()
-                                    }
-                                    
-                                    platformPutSessionData("pending_date", selectedDate.toString())
-                                    platformPutSessionData("pending_time", time)
-                                    platformPutSessionData("pending_bid", bId)
-                                    platformPutSessionData("pending_sid", sId)
-                                    
-                                    val businessEmail = "mona@silentframes.net"
-                                    val currentPrice = freshServiceDetails?.price ?: service.price
-                                    val currentName = freshServiceDetails?.course_name ?: service.course_name
-                                    
-                                    var shortName = currentName.filter { it.isLetterOrDigit() || it.isWhitespace() }.take(20).trim()
-                                    if (shortName.isEmpty()) shortName = "Lesson"
-                                    
-                                    val totalCents = (currentPrice * 100.0).roundToInt()
-                                    val formattedAmount = "${totalCents / 100}.${(totalCents % 100).toString().padStart(2, '0')}"
-                                    
-                                    val baseUrl = platformGetCurrentUrl().substringBefore("?")
-                                    val returnUrl = if (baseUrl.endsWith("/")) "${baseUrl}?payment=success" else "$baseUrl/?payment=success"
-                                    
-                                    val paypalUrl = "https://www.paypal.com/cgi-bin/webscr?" +
-                                            "cmd=_xclick" +
-                                            "&business=${businessEmail.encodeURLParameter()}" +
-                                            "&item_name=${shortName.encodeURLParameter()}" +
-                                            "&amount=${formattedAmount.encodeURLParameter()}" +
-                                            "&currency_code=USD" +
-                                            "&no_shipping=1" +
-                                            "&return=${returnUrl.encodeURLParameter()}" +
-                                            "&rm=1"
-                                    
-                                    platformOpenUrl(paypalUrl)
-                                }
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        enabled = selectedTime != null && (!showTermsSection || agreedToTerms) && !isLoading,
-                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(if (isPrepaid) "Confirm Schedule" else "Pay with PayPal", color = Color.White, fontSize = 18.sp)
-                    }
-
-                    if (bookingStatus?.isFailure == true) {
-                        val errorMsg = bookingStatus?.exceptionOrNull()?.message ?: "Booking failed"
-                        Text(
-                            text = errorMsg,
-                            color = Color.Red,
-                            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    
-                    Spacer(modifier = Modifier.height(100.dp))
                 }
 
-                // Interactive Scrollbar
-                ZeitunaScrollbar(
-                    scrollState = scrollState,
-                    modifier = Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)
-                )
+                if (showTermsSection) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TermsSection(
+                        agreed = agreedToTerms,
+                        onAgreedChange = { agreedToTerms = it }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = {
+                        val bId = service.bookitit_service_id
+                        val sId = service.id
+                        val time = selectedTime
+                        
+                        if (bId != null && sId != null && time != null) {
+                            val marginCheck = viewModel.validateSchedulingMargin(selectedDate.toString(), time)
+                            if (marginCheck.isFailure) {
+                                showMarginDialog = true
+                                return@Button
+                            }
+
+                            if (isPrepaid) {
+                                viewModel.schedulePackageLesson(
+                                    bookititId = bId,
+                                    bookingId = existingBookingId!!,
+                                    date = selectedDate.toString(),
+                                    time = time,
+                                    duration = service.duration
+                                )
+                            } else {
+                                if (showTermsSection && agreedToTerms) {
+                                    viewModel.updatePurchaseAgreement()
+                                }
+                                
+                                platformPutSessionData("pending_date", selectedDate.toString())
+                                platformPutSessionData("pending_time", time)
+                                platformPutSessionData("pending_bid", bId)
+                                platformPutSessionData("pending_sid", sId)
+                                
+                                val businessEmail = "mona@silentframes.net"
+                                val currentPrice = freshServiceDetails?.price ?: service.price
+                                val currentName = freshServiceDetails?.course_name ?: service.course_name
+                                
+                                var shortName = currentName.filter { it.isLetterOrDigit() || it.isWhitespace() }.take(20).trim()
+                                if (shortName.isEmpty()) shortName = "Lesson"
+                                
+                                val totalCents = (currentPrice * 100.0).roundToInt()
+                                val formattedAmount = "${totalCents / 100}.${(totalCents % 100).toString().padStart(2, '0')}"
+                                
+                                val baseUrl = platformGetCurrentUrl().substringBefore("?")
+                                val returnUrl = if (baseUrl.endsWith("/")) "${baseUrl}?payment=success" else "$baseUrl/?payment=success"
+                                
+                                val paypalUrl = "https://www.paypal.com/cgi-bin/webscr?" +
+                                        "cmd=_xclick" +
+                                        "&business=${businessEmail.encodeURLParameter()}" +
+                                        "&item_name=${shortName.encodeURLParameter()}" +
+                                        "&amount=${formattedAmount.encodeURLParameter()}" +
+                                        "&currency_code=USD" +
+                                        "&no_shipping=1" +
+                                        "&return=${returnUrl.encodeURLParameter()}" +
+                                        "&rm=1"
+                                
+                                platformOpenUrl(paypalUrl)
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    enabled = selectedTime != null && (!showTermsSection || agreedToTerms) && !isLoading,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(if (isPrepaid) "Confirm Schedule" else "Pay with PayPal", color = Color.White, fontSize = 18.sp)
+                }
+
+                if (bookingStatus?.isFailure == true) {
+                    val errorMsg = bookingStatus?.exceptionOrNull()?.message ?: "Booking failed"
+                    Text(
+                        text = errorMsg,
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(64.dp))
             }
         }
     }
@@ -322,7 +340,7 @@ fun DateSelectionCard(
     Card(
         elevation = 2.dp,
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = Color.White.copy(alpha = 0.9f),
         modifier = Modifier.fillMaxWidth()
     ) {
         val today = remember(localTZ) {
@@ -346,7 +364,7 @@ fun DateSelectionCard(
                         .aspectRatio(1f)
                         .padding(2.dp)
                         .background(
-                            color = if (isSelected) MaterialTheme.colors.primary else Color.Transparent,
+                            color = if (isSelected) TurquoisePrimary else Color.Transparent,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .clickable { onDateSelected(date) },
@@ -357,12 +375,12 @@ fun DateSelectionCard(
                             text = date.dayOfMonth.toString(),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isSelected) Color.White else MaterialTheme.colors.onSurface
+                            color = if (isSelected) Color.White else Color.Black
                         )
                         Text(
                             text = date.month.name.take(3),
                             fontSize = 9.sp,
-                            color = if (isSelected) Color.White else MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                            color = if (isSelected) Color.White else Color.Gray
                         )
                     }
                 }
@@ -401,8 +419,8 @@ fun TimeSlotGrid(
                     Card(
                         elevation = 1.dp,
                         shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                        backgroundColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
+                        border = BorderStroke(1.dp, TurquoisePrimary),
+                        backgroundColor = if (isSelected) TurquoisePrimary else Color.White.copy(alpha = 0.9f),
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
@@ -412,7 +430,7 @@ fun TimeSlotGrid(
                             text = displayTime,
                             modifier = Modifier.padding(12.dp),
                             textAlign = TextAlign.Center,
-                            color = if (isSelected) Color.White else MaterialTheme.colors.onSurface,
+                            color = if (isSelected) Color.White else TurquoiseDark,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
@@ -431,13 +449,13 @@ fun TermsSection(agreed: Boolean, onAgreedChange: (Boolean) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+            .background(Color.White.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
             .padding(12.dp)
     ) {
         Text(
             text = "I understand that lesson courses and individual lesson purchases are non-refundable. I may unschedule or reschedule my lessons at no additional cost up to 20 hours before the scheduled start time. Lessons that are not unscheduled within this period may be considered completed. Read the full terms of service for more details.",
             fontSize = 12.sp,
-            color = MaterialTheme.colors.onSurface,
+            color = Color.Black,
             lineHeight = 16.sp
         )
         Row(
@@ -447,13 +465,13 @@ fun TermsSection(agreed: Boolean, onAgreedChange: (Boolean) -> Unit) {
             Checkbox(
                 checked = agreed,
                 onCheckedChange = onAgreedChange,
-                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.primary)
+                colors = CheckboxDefaults.colors(checkedColor = TurquoisePrimary)
             )
             Text(
                 text = "I have read and agree to the purchase terms.",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.onSurface
+                color = Color.Black
             )
         }
     }
@@ -464,7 +482,7 @@ fun BookingSuccessScreen(onGoToProfile: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(Color(0xFFFFFBF0))
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -473,13 +491,13 @@ fun BookingSuccessScreen(onGoToProfile: () -> Unit) {
             Icons.Default.CheckCircle,
             contentDescription = null,
             modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colors.primary
+            tint = TurquoisePrimary
         )
         Text(
             text = "Booking Confirmed!",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onBackground,
+            color = TurquoiseDark,
             modifier = Modifier.padding(top = 24.dp)
         )
         Text(
@@ -487,7 +505,7 @@ fun BookingSuccessScreen(onGoToProfile: () -> Unit) {
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp),
-            color = MaterialTheme.colors.onBackground.copy(alpha = 0.8f)
+            color = Color.Black
         )
         Button(
             onClick = onGoToProfile,
@@ -495,7 +513,7 @@ fun BookingSuccessScreen(onGoToProfile: () -> Unit) {
                 .fillMaxWidth()
                 .padding(top = 32.dp)
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+            colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text("Go to My Profile", color = Color.White)

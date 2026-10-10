@@ -32,9 +32,6 @@ class AuthViewModel : ViewModel() {
     private val _legalUpdateSuccess = MutableStateFlow<Boolean?>(null)
     val legalUpdateSuccess: StateFlow<Boolean?> = _legalUpdateSuccess.asStateFlow()
 
-    private val _resetPasswordSent = MutableStateFlow<Boolean?>(null)
-    val resetPasswordSent: StateFlow<Boolean?> = _resetPasswordSent.asStateFlow()
-
     fun login(emailInput: String, passwordInput: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -73,7 +70,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun register(emailInput: String, passwordInput: String, fullNameInput: String, redirectUrlInput: String? = null) {
+    fun register(emailInput: String, passwordInput: String, fullNameInput: String) {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -83,10 +80,7 @@ class AuthViewModel : ViewModel() {
 
                 try { SupabaseClientObj.client.auth.signOut() } catch (e: Exception) {}
                 
-                val user = SupabaseClientObj.client.auth.signUpWith(
-                    provider = Email,
-                    redirectUrl = redirectUrlInput
-                ) {
+                val user = SupabaseClientObj.client.auth.signUpWith(Email) {
                     email = emailInput
                     password = passwordInput
                     data = buildJsonObject { put("full_name", fullNameInput) }
@@ -137,17 +131,13 @@ class AuthViewModel : ViewModel() {
     fun sendResetPasswordEmail(emailInput: String, redirectUrlInput: String? = null) {
         viewModelScope.launch {
             _isLoading.value = true
-            _resetPasswordSent.value = null
-            _error.value = null
             try {
                 SupabaseClientObj.client.auth.resetPasswordForEmail(
                     email = emailInput,
                     redirectUrl = redirectUrlInput
                 )
-                _resetPasswordSent.value = true
             } catch (e: Exception) {
-                _error.value = e.message ?: "Failed to send reset email"
-                _resetPasswordSent.value = false
+                _error.value = e.message
             } finally {
                 _isLoading.value = false
             }
@@ -190,9 +180,5 @@ class AuthViewModel : ViewModel() {
     
     fun clearError() {
         _error.value = null
-    }
-
-    fun clearResetStatus() {
-        _resetPasswordSent.value = null
     }
 }

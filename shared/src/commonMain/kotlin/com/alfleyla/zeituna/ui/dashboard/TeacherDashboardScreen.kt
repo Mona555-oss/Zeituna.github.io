@@ -2,12 +2,10 @@ package com.alfleyla.zeituna.ui.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -48,7 +46,6 @@ fun TeacherDashboardScreen(
 
     var showCreateQuiz by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.loadProfileData()
@@ -110,7 +107,7 @@ fun TeacherDashboardScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Card(
                     elevation = 2.dp,
@@ -189,12 +186,6 @@ fun TeacherDashboardScreen(
 
                 Spacer(modifier = Modifier.height(100.dp))
             }
-
-            // Visible Scrollbar
-            VerticalScrollbar(
-                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                adapter = rememberScrollbarAdapter(scrollState)
-            )
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

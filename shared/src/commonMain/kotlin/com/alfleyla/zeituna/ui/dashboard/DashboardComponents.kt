@@ -1,11 +1,9 @@
 package com.alfleyla.zeituna.ui.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -14,10 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,7 +22,6 @@ import com.alfleyla.zeituna.data.models.BookititEvent
 import com.alfleyla.zeituna.theme.TurquoisePrimary
 import com.alfleyla.zeituna.theme.TurquoiseDark
 import com.alfleyla.zeituna.utils.DateTimeUtils
-import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 
 @Composable
@@ -38,12 +32,11 @@ fun PackageItem(
     Card(
         elevation = 1.dp,
         shape = MaterialTheme.shapes.medium,
-        backgroundColor = MaterialTheme.colors.surface,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable { onClick() },
-        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+        border = BorderStroke(1.dp, Color(0xFFFFFBF0))
     ) {
         Row(
             modifier = Modifier
@@ -56,18 +49,24 @@ fun PackageItem(
                     text = booking.service?.course_name ?: "Lesson Pack",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
+                    color = Color.Black
                 )
                 Text(
                     text = "Status: ${booking.status}",
                     fontSize = 12.sp,
-                    color = MaterialTheme.colors.primary
+                    color = TurquoiseDark
                 )
                 Text(
                     text = "bought: ${booking.created_at?.take(10) ?: "-"}",
                     fontSize = 10.sp,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    color = Color.Black,
                     modifier = Modifier.padding(top = 4.dp)
+                )
+                Text(
+                    text = "expires: ${booking.expires_at?.take(10) ?: "-"}",
+                    fontSize = 10.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 2.dp)
                 )
             }
 
@@ -76,12 +75,12 @@ fun PackageItem(
                     text = "${booking.remaining_lessons}",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
+                    color = TurquoisePrimary
                 )
                 Text(
                     text = "Left",
                     fontSize = 10.sp,
-                    color = MaterialTheme.colors.primary
+                    color = Color.Black
                 )
             }
         }
@@ -100,51 +99,156 @@ fun LessonItem(
     val isInactive = isUnscheduled || isCompleted
 
     val cardAlpha = if (isInactive) 0.6f else 1.0f
-    val statusColor = if (isUnscheduled) Color(0xFFE57373) else if (isCompleted) Color.Gray else MaterialTheme.colors.primary
+    val borderColor = if (isInactive) Color(0xFFCCCCCC) else Color(0xFFFFFBF0)
+    val statusColor = if (isUnscheduled) Color(0xFFD32F2F) else if (isCompleted) Color.Gray else TurquoiseDark
 
     var showFullReason by remember { mutableStateOf(false) }
+
     val localTZ = remember { DateTimeUtils.safeTimeZone(null) }
     
     val localLessonDateTime = remember(event.date, event.start, event.teacher_timezone, localTZ) {
-        DateTimeUtils.convertTeacherToLocal(event.date, event.start, event.teacher_timezone, localTZ)
+        DateTimeUtils.convertTeacherToLocal(
+            dateStr = event.date,
+            timeStr = event.start,
+            teacherTZStr = event.teacher_timezone,
+            localTZ = localTZ
+        )
     }
 
     val displayDate = localLessonDateTime?.date?.toString() ?: event.date
     val displayTime = localLessonDateTime?.time?.toString()?.take(5) ?: event.start.take(5)
 
+    val scheduledAtLocal = remember(event.created_at, localTZ) {
+        try {
+            event.created_at?.let {
+                val instant = Instant.parse(it.replace(" ", "T").let { s -> 
+                    if (!s.contains("Z") && !s.contains("+")) s + "Z" else s 
+                })
+                val local = instant.toLocalDateTime(localTZ)
+                "${local.date} ${local.time.toString().take(5)}"
+            } ?: "-"
+        } catch (t: Throwable) {
+            event.created_at?.replace("T", " ")?.take(16) ?: "-" 
+        }
+    }
+
     Card(
         elevation = 1.dp,
         shape = MaterialTheme.shapes.medium,
-        backgroundColor = MaterialTheme.colors.surface,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .alpha(cardAlpha),
-        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+        border = BorderStroke(1.dp, borderColor)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
                 modifier = Modifier.width(80.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = displayDate, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onSurface)
-                Text(text = displayTime, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.primary)
+                if (isUnscheduled) {
+                    Text(
+                        text = "previously scheduled time:",
+                        fontSize = 9.sp,
+                        color = Color(0xFF666666),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 2.dp)
+                    )
+                }
+
+                Text(
+                    text = displayDate,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = displayTime,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isInactive) Color.Gray else TurquoiseDark
+                )
             }
 
-            Divider(modifier = Modifier.width(1.dp).height(50.dp).padding(horizontal = 8.dp), color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+            Divider(
+                modifier = Modifier
+                    .width(1.dp)
+                    .height(60.dp)
+                    .padding(horizontal = 8.dp),
+                color = borderColor
+            )
 
-            Column(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
-                event.client_name?.let { Text(text = it, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.primary) }
-                Text(text = event.service_name ?: "Lesson", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onSurface)
-                Text(text = "Status: ${event.status ?: "Confirmed"}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = statusColor)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+            ) {
+                if (!event.client_name.isNullOrEmpty()) {
+                    Text(
+                        text = event.client_name!!,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TurquoiseDark
+                    )
+                }
+                Text(
+                    text = event.service_name ?: "Lesson",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Status: ${event.status ?: "Confirmed"}",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = statusColor
+                )
+
+                Text(
+                    text = "scheduled: $scheduledAtLocal",
+                    fontSize = 10.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+
+                if (!event.unschedule_reason.isNullOrEmpty()) {
+                    val reason = event.unschedule_reason!!
+                    Column(modifier = Modifier.padding(top = 4.dp)) {
+                        Text(
+                            text = "Reason: ${if (showFullReason || reason.length <= 50) reason else reason.take(50) + "..."}",
+                            fontSize = 11.sp,
+                            color = Color(0xFFD32F2F)
+                        )
+                        if (reason.length > 50 && !showFullReason) {
+                            Text(
+                                text = "more",
+                                fontSize = 11.sp,
+                                color = TurquoiseDark,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(top = 2.dp)
+                                    .clickable { showFullReason = true }
+                            )
+                        }
+                    }
+                }
             }
 
             if (showUnschedule && !isInactive) {
-                TextButton(onClick = onUnscheduleClick) {
-                    Text(text = "Unschedule", color = MaterialTheme.colors.primary, fontSize = 12.sp)
+                TextButton(
+                    onClick = onUnscheduleClick,
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Text(
+                        text = "Unschedule",
+                        color = TurquoisePrimary,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
@@ -161,76 +265,28 @@ fun CollapsibleSection(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().clickable { isExpanded = !isExpanded }.padding(vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { isExpanded = !isExpanded }
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = title.uppercase(), modifier = Modifier.weight(1f), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onBackground)
-            Icon(imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown, contentDescription = null, tint = MaterialTheme.colors.onBackground)
+            Text(
+                text = title.uppercase(),
+                modifier = Modifier.weight(1f),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Icon(
+                imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
+                contentDescription = null
+            )
         }
         AnimatedVisibility(visible = isExpanded) {
-            Column { content() }
+            Column {
+                content()
+            }
         }
-        Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
-    }
-}
-
-/**
- * A custom interactive mouse-based scrollbar for Web and Android.
- */
-@Composable
-fun ZeitunaScrollbar(
-    scrollState: ScrollState,
-    modifier: Modifier = Modifier
-) {
-    val maxScroll = scrollState.maxValue.toFloat()
-    if (maxScroll <= 0) return
-
-    val scope = rememberCoroutineScope()
-    val density = LocalDensity.current
-    
-    BoxWithConstraints(modifier = modifier.fillMaxHeight().width(14.dp)) {
-        val viewHeightPx = with(density) { maxHeight.toPx() }
-        val contentHeightPx = viewHeightPx + maxScroll
-        
-        val thumbHeightPx = (viewHeightPx / contentHeightPx) * viewHeightPx
-        val thumbHeightDp = with(density) { thumbHeightPx.coerceAtLeast(80f).toDp() }
-        
-        val trackHeightPx = viewHeightPx - with(density) { thumbHeightDp.toPx() }
-        val currentScroll = scrollState.value.toFloat()
-        val scrollPercent = if (maxScroll > 0) currentScroll / maxScroll else 0f
-        val thumbOffsetDp = with(density) { (scrollPercent * trackHeightPx).toDp() }
-
-        // Track (Jump to Click)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.05f), CircleShape)
-                .pointerInput(maxScroll) {
-                    detectTapGestures { offset ->
-                        val targetPercent = (offset.y / viewHeightPx).coerceIn(0f, 1f)
-                        scope.launch { scrollState.scrollTo((targetPercent * maxScroll).toInt()) }
-                    }
-                }
-        )
-
-        // Handle (Drag to Scroll)
-        Box(
-            modifier = Modifier
-                .offset(y = thumbOffsetDp)
-                .width(8.dp)
-                .height(thumbHeightDp)
-                .clip(CircleShape)
-                .background(TurquoiseDark.copy(alpha = 0.7f))
-                .draggable(
-                    orientation = Orientation.Vertical,
-                    state = rememberDraggableState { delta ->
-                        if (trackHeightPx > 0) {
-                            val scrollDelta = (delta / trackHeightPx) * maxScroll
-                            scope.launch { scrollState.scrollBy(scrollDelta) }
-                        }
-                    }
-                )
-                .align(Alignment.TopCenter)
-        )
+        Divider()
     }
 }
