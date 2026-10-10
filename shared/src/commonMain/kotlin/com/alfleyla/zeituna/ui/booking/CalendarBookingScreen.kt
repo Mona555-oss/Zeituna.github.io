@@ -76,34 +76,6 @@ fun CalendarBookingScreen(
         !isPrepaid && profile?.agreed_to_purchase_terms != true
     }
 
-    LaunchedEffect(Unit) {
-        val currentUrl = platformGetCurrentUrl()
-        if (currentUrl.contains("payment=success")) {
-            val savedDate = platformGetSessionData("pending_date")
-            val savedTime = platformGetSessionData("pending_time")
-            val savedBId = platformGetSessionData("pending_bid")
-            val savedSId = platformGetSessionData("pending_sid")
-            
-            if (!savedDate.isNullOrBlank() && !savedTime.isNullOrBlank()) {
-                platformPutSessionData("pending_date", "")
-                platformPutSessionData("pending_time", "")
-                platformClearUrlParams()
-                
-                selectedDate = LocalDate.parse(savedDate)
-                selectedTime = savedTime
-                
-                viewModel.confirmBooking(
-                    bookititId = savedBId ?: service.bookitit_service_id ?: "",
-                    supabaseId = savedSId ?: service.id ?: "",
-                    date = savedDate,
-                    time = savedTime,
-                    duration = service.duration,
-                    lessonCount = service.count
-                )
-            }
-        }
-    }
-
     LaunchedEffect(selectedDate) {
         service.bookitit_service_id?.let { sId ->
             service.bookitit_agenda_id?.let { aId ->
@@ -123,20 +95,21 @@ fun CalendarBookingScreen(
     if (showMarginDialog) {
         AlertDialog(
             onDismissRequest = { showMarginDialog = false },
+            backgroundColor = MaterialTheme.colors.surface,
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
                     Spacer(Modifier.width(8.dp))
-                    Text("Scheduling Rule")
+                    Text("Scheduling Rule", color = MaterialTheme.colors.onSurface)
                 }
             },
             text = {
                 Column {
-                    Text("Lessons have to be booked in 20 hours or more in advance. Please choose a later time slot.")
+                    Text("Lessons have to be booked in 20 hours or more in advance. Please choose a later time slot.", color = MaterialTheme.colors.onSurface)
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = "Read our terms of service to know more.",
-                        color = TurquoisePrimary,
+                        color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable {
                             platformOpenUrl("./terms_of_service.html")
@@ -146,7 +119,7 @@ fun CalendarBookingScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showMarginDialog = false }) {
-                    Text("OK", color = TurquoisePrimary)
+                    Text("OK", color = MaterialTheme.colors.primary)
                 }
             },
             shape = RoundedCornerShape(12.dp)
@@ -171,14 +144,14 @@ fun CalendarBookingScreen(
             backgroundColor = Color.Transparent,
             topBar = {
                 TopAppBar(
-                    title = { Text(if (isPrepaid) "Schedule Lesson" else "Select Date and Time", color = Color.White) },
+                    title = { Text(if (isPrepaid) "Schedule Lesson" else "Select Date and Time", color = MaterialTheme.colors.onPrimary) },
                     backgroundColor = MaterialTheme.colors.primary,
                     navigationIcon = {
                         IconButton(onClick = {
                             viewModel.clearBookingStatus()
                             onBack()
                         }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colors.onPrimary)
                         }
                     },
                     elevation = 4.dp
@@ -197,7 +170,7 @@ fun CalendarBookingScreen(
                         text = "Choose a Date",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onSurface,
+                        color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
@@ -216,7 +189,7 @@ fun CalendarBookingScreen(
                         text = "Available Slots (${localTZ.id})",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onSurface,
+                        color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
@@ -229,7 +202,7 @@ fun CalendarBookingScreen(
                             text = "No available slots for this date.",
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                            color = MaterialTheme.colors.onSurface
+                            color = MaterialTheme.colors.onBackground
                         )
                     } else {
                         TimeSlotGrid(
@@ -264,40 +237,54 @@ fun CalendarBookingScreen(
                                     return@Button
                                 }
 
-                                platformPutSessionData("pending_date", selectedDate.toString())
-                                platformPutSessionData("pending_time", time)
-                                platformPutSessionData("pending_bid", bId)
-                                platformPutSessionData("pending_sid", sId)
-
-                                val businessEmail = "mona@silentframes.net"
-                                val currentPrice = freshServiceDetails?.price ?: service.price
-                                val currentName = freshServiceDetails?.course_name ?: service.course_name
-
-                                var shortName = currentName.filter { it.isLetterOrDigit() || it.isWhitespace() }.take(20).trim()
-                                if (shortName.isEmpty()) shortName = "Lesson"
-
-                                val totalCents = (currentPrice * 100.0).roundToInt()
-                                val formattedAmount = "${totalCents / 100}.${(totalCents % 100).toString().padStart(2, '0')}"
-
-                                val baseUrl = platformGetCurrentUrl().substringBefore("?")
-                                val returnUrl = if (baseUrl.endsWith("/")) "${baseUrl}?payment=success" else "$baseUrl/?payment=success"
-
-                                val paypalUrl = "https://www.paypal.com/cgi-bin/webscr?" +
-                                        "cmd=_xclick" +
-                                        "&business=${businessEmail.encodeURLParameter()}" +
-                                        "&item_name=${shortName.encodeURLParameter()}" +
-                                        "&amount=${formattedAmount.encodeURLParameter()}" +
-                                        "&currency_code=USD" +
-                                        "&no_shipping=1" +
-                                        "&return=${returnUrl.encodeURLParameter()}" +
-                                        "&rm=1"
-
-                                platformOpenUrl(paypalUrl)
+                                if (isPrepaid) {
+                                    viewModel.schedulePackageLesson(
+                                        bookititId = bId,
+                                        bookingId = existingBookingId!!,
+                                        date = selectedDate.toString(),
+                                        time = time,
+                                        duration = service.duration
+                                    )
+                                } else {
+                                    if (showTermsSection && agreedToTerms) {
+                                        viewModel.updatePurchaseAgreement()
+                                    }
+                                    
+                                    platformPutSessionData("pending_date", selectedDate.toString())
+                                    platformPutSessionData("pending_time", time)
+                                    platformPutSessionData("pending_bid", bId)
+                                    platformPutSessionData("pending_sid", sId)
+                                    
+                                    val businessEmail = "mona@silentframes.net"
+                                    val currentPrice = freshServiceDetails?.price ?: service.price
+                                    val currentName = freshServiceDetails?.course_name ?: service.course_name
+                                    
+                                    var shortName = currentName.filter { it.isLetterOrDigit() || it.isWhitespace() }.take(20).trim()
+                                    if (shortName.isEmpty()) shortName = "Lesson"
+                                    
+                                    val totalCents = (currentPrice * 100.0).roundToInt()
+                                    val formattedAmount = "${totalCents / 100}.${(totalCents % 100).toString().padStart(2, '0')}"
+                                    
+                                    val baseUrl = platformGetCurrentUrl().substringBefore("?")
+                                    val returnUrl = if (baseUrl.endsWith("/")) "${baseUrl}?payment=success" else "$baseUrl/?payment=success"
+                                    
+                                    val paypalUrl = "https://www.paypal.com/cgi-bin/webscr?" +
+                                            "cmd=_xclick" +
+                                            "&business=${businessEmail.encodeURLParameter()}" +
+                                            "&item_name=${shortName.encodeURLParameter()}" +
+                                            "&amount=${formattedAmount.encodeURLParameter()}" +
+                                            "&currency_code=USD" +
+                                            "&no_shipping=1" +
+                                            "&return=${returnUrl.encodeURLParameter()}" +
+                                            "&rm=1"
+                                    
+                                    platformOpenUrl(paypalUrl)
+                                }
                             }
                         },
                         modifier = Modifier.fillMaxWidth().height(50.dp),
                         enabled = selectedTime != null && (!showTermsSection || agreedToTerms) && !isLoading,
-                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primaryVariant),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(if (isPrepaid) "Confirm Schedule" else "Pay with PayPal", color = Color.White, fontSize = 18.sp)
@@ -313,7 +300,7 @@ fun CalendarBookingScreen(
                         )
                     }
                     
-                    Spacer(modifier = Modifier.height(64.dp))
+                    Spacer(modifier = Modifier.height(100.dp))
                 }
 
                 // Interactive Scrollbar
@@ -335,7 +322,7 @@ fun DateSelectionCard(
     Card(
         elevation = 2.dp,
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = MaterialTheme.colors.surface.copy(alpha = 0.9f),
+        backgroundColor = MaterialTheme.colors.surface,
         modifier = Modifier.fillMaxWidth()
     ) {
         val today = remember(localTZ) {
@@ -375,7 +362,7 @@ fun DateSelectionCard(
                         Text(
                             text = date.month.name.take(3),
                             fontSize = 9.sp,
-                            color = if (isSelected) Color.White else Color.Gray
+                            color = if (isSelected) Color.White else MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
                         )
                     }
                 }
@@ -415,7 +402,7 @@ fun TimeSlotGrid(
                         elevation = 1.dp,
                         shape = RoundedCornerShape(8.dp),
                         border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                        backgroundColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.surface.copy(alpha = 0.9f),
+                        backgroundColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
