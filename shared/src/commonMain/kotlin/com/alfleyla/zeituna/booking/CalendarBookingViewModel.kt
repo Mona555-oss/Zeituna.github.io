@@ -56,7 +56,7 @@ class CalendarBookingViewModel : ViewModel() {
                 SupabaseClientObj.client.auth.awaitInitialization()
                 val user = SupabaseClientObj.client.auth.currentUserOrNull()
                 platformLog("CalendarVM", "Current user: ${user?.id}")
-                
+
                 if (user != null) {
                     val profile = fetchProfileSync(user.id)
                     _userProfile.value = profile
@@ -151,7 +151,7 @@ class CalendarBookingViewModel : ViewModel() {
             val lessonInstant = lessonDT.toInstant(tz)
             val now = Clock.System.now()
             val diff = lessonInstant - now
-            if (diff.inWholeHours < 2) {
+            if (diff.inWholeHours < 20) {
                 Result.failure(Exception("Lessons must be scheduled at least 20 hours in advance."))
             } else { Result.success(true) }
         } catch (e: Throwable) { 
@@ -191,14 +191,14 @@ class CalendarBookingViewModel : ViewModel() {
                 val agendaId = service?.bookitit_agenda_id ?: ""
                 
                 val rootBooking = Booking(
-                    id = rootId, 
-                    user_id = user.id, 
+                    id = rootId,
+                    user_id = user.id,
                     service_id = supabaseId,
-                    status = "active", 
-                    remaining_lessons = lessonCount, 
-                    email = user.email ?: profile?.email, 
+                    status = "active",
+                    remaining_lessons = lessonCount,
+                    email = user.email ?: profile?.email,
                     expires_at = calculateExpiry(service),
-                    bookitit_agenda_id = agendaId, 
+                    bookitit_agenda_id = agendaId,
                     student_name = profile?.full_name
                 )
                 
@@ -278,7 +278,7 @@ class CalendarBookingViewModel : ViewModel() {
                 _bookingStatus.value = Result.success(true)
             }.onFailure { e -> 
                 platformLog("CalendarVM", "Provider scheduling failed: ${e.message}", true)
-                _bookingStatus.value = Result.failure(Exception("Scheduling failed: ${e.message}")) 
+                _bookingStatus.value = Result.failure(Exception("Scheduling failed: ${e.message}"))
             }
         } catch (e: Exception) {
             platformLog("CalendarVM", "Internal processing error: ${e.message}", true)
