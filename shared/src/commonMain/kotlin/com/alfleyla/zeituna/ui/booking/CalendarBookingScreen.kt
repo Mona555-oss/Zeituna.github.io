@@ -17,6 +17,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -347,51 +349,146 @@ fun DateSelectionCard(
     onDateSelected: (LocalDate) -> Unit,
     localTZ: TimeZone
 ) {
-    Card(
-        elevation = 2.dp,
-        shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color.White.copy(alpha = 0.9f),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        val today = remember(localTZ) {
-            try {
-                Clock.System.now().toLocalDateTime(localTZ).date
-            } catch (t: Throwable) {
-                Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+    val isWeb = remember { platformGetCurrentUrl().startsWith("http") }
+
+    val today = remember(localTZ) {
+        try {
+            Clock.System.now().toLocalDateTime(localTZ).date
+        } catch (t: Throwable) {
+            Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+        }
+    }
+
+    if (!isWeb) {
+        Card(
+            elevation = 2.dp,
+            shape = RoundedCornerShape(12.dp),
+            backgroundColor = Color.White.copy(alpha = 0.9f),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val dates = (0..20).map { today.plus(it, DateTimeUnit.DAY) }
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(7),
+                modifier = Modifier.height(180.dp).padding(8.dp),
+                userScrollEnabled = false
+            ) {
+                items(dates) { date ->
+                    val isSelected = date == selectedDate
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .padding(2.dp)
+                            .background(
+                                color = if (isSelected) TurquoisePrimary else Color.Transparent,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable { onDateSelected(date) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = date.dayOfMonth.toString(),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isSelected) Color.White else Color.Black
+                            )
+                            Text(
+                                text = date.month.name.take(3),
+                                fontSize = 9.sp,
+                                color = if (isSelected) Color.White else Color.Gray
+                            )
+                        }
+                    }
+                }
             }
         }
-        val dates = (0..20).map { today.plus(it, DateTimeUnit.DAY) }
+    } else {
+        var weekOffset by remember { mutableStateOf(0) }
+        val dates = remember(today, weekOffset) {
+            val start = today.plus(weekOffset * 7, DateTimeUnit.DAY)
+            (0..20).map { start.plus(it, DateTimeUnit.DAY) }
+        }
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(7),
-            modifier = Modifier.height(180.dp).padding(8.dp),
-            userScrollEnabled = false
+        Card(
+            elevation = 2.dp,
+            shape = RoundedCornerShape(12.dp),
+            backgroundColor = Color.White.copy(alpha = 0.9f),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            items(dates) { date ->
-                val isSelected = date == selectedDate
-                Box(
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .padding(2.dp)
-                        .background(
-                            color = if (isSelected) TurquoisePrimary else Color.Transparent,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .clickable { onDateSelected(date) },
-                    contentAlignment = Alignment.Center
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = date.dayOfMonth.toString(),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isSelected) Color.White else Color.Black
+                    IconButton(
+                        onClick = { if (weekOffset > 0) weekOffset-- },
+                        enabled = weekOffset > 0
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowLeft,
+                            contentDescription = "Previous Week",
+                            tint = if (weekOffset > 0) TurquoisePrimary else Color.Gray
                         )
-                        Text(
-                            text = date.month.name.take(3),
-                            fontSize = 9.sp,
-                            color = if (isSelected) Color.White else Color.Gray
+                    }
+
+                    Text(
+                        text = "${dates.first().month.name} ${dates.first().year}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = TurquoiseDark
+                    )
+
+                    IconButton(
+                        onClick = { if (weekOffset < 25) weekOffset++ },
+                        enabled = weekOffset < 25
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowRight,
+                            contentDescription = "Next Week",
+                            tint = if (weekOffset < 25) TurquoisePrimary else Color.Gray
                         )
+                    }
+                }
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(7),
+                    modifier = Modifier.height(220.dp).padding(8.dp),
+                    userScrollEnabled = false
+                ) {
+                    items(dates) { date ->
+                        val isSelected = date == selectedDate
+                        Box(
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .padding(2.dp)
+                                .background(
+                                    color = if (isSelected) TurquoisePrimary else Color.Transparent,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .clickable { onDateSelected(date) },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = date.dayOfWeek.name.take(3),
+                                    fontSize = 10.sp,
+                                    color = if (isSelected) Color.White else Color.Gray
+                                )
+                                Text(
+                                    text = date.dayOfMonth.toString(),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isSelected) Color.White else Color.Black
+                                )
+                                Text(
+                                    text = date.month.name.take(3),
+                                    fontSize = 9.sp,
+                                    color = if (isSelected) Color.White else Color.Gray
+                                )
+                            }
+                        }
                     }
                 }
             }
