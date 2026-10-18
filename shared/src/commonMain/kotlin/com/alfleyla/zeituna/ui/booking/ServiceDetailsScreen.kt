@@ -133,7 +133,7 @@ fun ServiceDetailsScreen(
                         colors = ButtonDefaults.buttonColors(backgroundColor = TurquoisePrimary),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("Buy this Package", color = Color.White, fontSize = 18.sp)
+                        Text("Book This Course", color = Color.White, fontSize = 18.sp)
                     }
 
                     Spacer(modifier = Modifier.height(50.dp))
