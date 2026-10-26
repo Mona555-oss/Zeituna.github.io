@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        var path = window.location.pathname;
+        var search = window.location.search;
+        // If the URL is broken with a trailing slash (app.html/)
+        if (path.includes('app.html/')) {
+            window.location.replace(path.replace('app.html/', 'app.html') + search);
+        } else {
+            // Otherwise just go home
+            window.location.replace('/');
+        }
+    </script>
+</head>
+<body></body>
+</html>
