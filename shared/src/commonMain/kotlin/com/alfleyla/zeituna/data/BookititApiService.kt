@@ -87,12 +87,15 @@ object BookititApiService {
         val cleanAgendaId = agendaId.trim().let { if (!it.startsWith("bkt")) "bkt$it" else it }
         val urlPart = "getfreeslots/${PUBLIC_KEY.trim()}/$cleanServiceId/$cleanAgendaId/${date.trim()}"
 
-        return try {
-            val response = client.get("${getBaseUrl()}$urlPart") {
-                header("Authorization", makeBasicAuth(urlPart))
-                header("Accept", "application/json")
-                applyProxyHeaders()
-            }
+         return try {
+        val response = client.get("${getBaseUrl()}$urlPart") {
+            header("Authorization", makeBasicAuth(urlPart))
+            header("Accept", "application/json")
+            header("Cache-Control", "no-cache") // Forces fresh data from Bookitit
+            parameter("t", Clock.System.now().toEpochMilliseconds()) // Prevents browser caching
+            applyProxyHeaders()
+        }
+
             val body = response.bodyAsText()
             val jsonElement = safeParseJson(body)
 
