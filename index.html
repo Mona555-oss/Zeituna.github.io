@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SilentSpace</title>
+    <meta name="theme-color" content="#F7F5EC">
+    <meta name="description" content="SilentSpace helps you learn languages, practise conversation, and book online lessons at your own pace.">
+
+    <title>SilentSpace — Your Language Journey Starts Here</title>
 
     <style>
         :root {
-            --cream: #F3F0DF;
+            --cream: #F7F5EC;
+            --cream-dark: #EEEBDD;
             --olive: #596B35;
             --olive-dark: #46552A;
+            --olive-light: #E8EDDF;
             --text: #263020;
-            --white: #FFFDF5;
+            --muted: #747966;
+            --white: #FFFDF8;
+            --border: rgba(89, 107, 53, 0.14);
+            --shadow: 0 24px 70px rgba(48, 57, 32, 0.08);
         }
 
         * {
@@ -20,15 +28,26 @@
             padding: 0;
         }
 
-        html, body {
+        html,
+        body {
             width: 100%;
-            height: 100%;
+            min-height: 100%;
             background: var(--cream);
-            margin: 0;
-            padding: 0;
         }
 
-        /* The App Container - Hidden until Login is clicked or payment is finished */
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        /* App container — hidden until login or payment success */
         #compose-receiver {
             display: none;
             width: 100%;
@@ -38,97 +57,366 @@
             left: 0;
         }
 
-        /* Landing Page Container */
+        /* Landing page */
         #landing-content {
+            position: relative;
             min-height: 100vh;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 24px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        /* Soft background decoration */
+        #landing-content::before,
+        #landing-content::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #landing-content::before {
+            width: 420px;
+            height: 420px;
+            top: -230px;
+            right: -150px;
+            background: rgba(89, 107, 53, 0.07);
+        }
+
+        #landing-content::after {
+            width: 360px;
+            height: 360px;
+            bottom: -220px;
+            left: -140px;
+            background: rgba(192, 176, 125, 0.12);
+        }
+
+        .topbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
-            font-family: Arial, Helvetica, sans-serif;
+            padding: 27px 32px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--olive);
+            font-size: 17px;
+            font-weight: 750;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 11px;
+            background: var(--olive);
+            color: var(--white);
+            font-size: 19px;
+            font-weight: 700;
         }
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
+            margin: 55px auto 30px;
             text-align: center;
+            animation: fade-up 0.7s ease both;
         }
 
         .logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 24px;
-            border-radius: 28px;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 28px;
+            border-radius: 25px;
             background: var(--olive);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            place-items: center;
             color: var(--cream);
-            font-size: 42px;
-            font-weight: bold;
-            box-shadow: 0 5px 12px rgba(50, 60, 30, 0.15);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 43px;
+            font-weight: 500;
+            box-shadow: 0 12px 28px rgba(50, 60, 30, 0.17);
+            transform: rotate(-4deg);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 19px;
+            padding: 8px 13px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            background: rgba(255, 253, 248, 0.65);
+            color: var(--olive);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #82965A;
         }
 
         h1 {
-            font-size: 32px;
+            max-width: 450px;
+            margin: 0 auto 18px;
+            color: var(--text);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(39px, 7vw, 57px);
+            font-weight: 500;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+
+        h1 span {
             color: var(--olive);
-            margin-bottom: 14px;
+            font-style: italic;
         }
 
         .subtitle {
-            font-size: 16px;
-            line-height: 1.7;
-            color: #666B55;
-            margin-bottom: 36px;
+            max-width: 390px;
+            margin: 0 auto 32px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.9;
         }
 
         .login-button {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             width: 100%;
-            padding: 16px 20px;
+            min-height: 58px;
+            padding: 17px 24px;
+            border: 1px solid var(--olive);
+            border-radius: 10px;
             background: var(--olive);
             color: var(--white);
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border-radius: 7px;
-            box-shadow: 0 3px 5px rgba(50, 60, 30, 0.18);
-            transition: background 0.2s, transform 0.2s;
+            font-size: 13px;
+            font-weight: 750;
+            letter-spacing: 1.4px;
             cursor: pointer;
-            border: none;
+            box-shadow: 0 7px 18px rgba(50, 60, 30, 0.13);
+            transition:
+                background 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
         }
 
         .login-button:hover {
             background: var(--olive-dark);
-            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(50, 60, 30, 0.19);
+            transform: translateY(-2px);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:focus-visible {
+            outline: 3px solid rgba(89, 107, 53, 0.35);
+            outline-offset: 4px;
+        }
+
+        .button-arrow {
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .login-button:hover .button-arrow {
+            transform: translateX(4px);
+        }
+
+        .trust-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .trust-icon {
+            color: var(--olive);
+            font-size: 15px;
         }
 
         .footer {
-            margin-top: 32px;
-            font-size: 12px;
-            color: #85896F;
+            position: absolute;
+            right: 24px;
+            bottom: 23px;
+            left: 24px;
+            text-align: center;
+            color: #898C7A;
+            font-size: 11px;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            #landing-content {
+                padding: 28px 24px;
+            }
+
+            .topbar {
+                padding: 22px 24px;
+            }
+
+            .container {
+                margin-top: 45px;
+            }
+
+            .logo {
+                width: 72px;
+                height: 72px;
+                border-radius: 22px;
+                font-size: 38px;
+                margin-bottom: 25px;
+            }
+
+            h1 {
+                font-size: clamp(36px, 10vw, 45px);
+                letter-spacing: -1.5px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                line-height: 1.8;
+                margin-bottom: 27px;
+            }
+
+            .footer {
+                font-size: 10px;
+                bottom: 16px;
+            }
+        }
+
+        @media (max-height: 650px) {
+            #landing-content {
+                justify-content: flex-start;
+                overflow-y: auto;
+            }
+
+            .container {
+                margin-top: 65px;
+                margin-bottom: 55px;
+            }
+
+            .logo {
+                width: 62px;
+                height: 62px;
+                margin-bottom: 20px;
+                font-size: 34px;
+            }
+
+            h1 {
+                font-size: clamp(34px, 6vw, 44px);
+            }
+
+            .subtitle {
+                margin-bottom: 22px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- 1. The Landing Page Section -->
+    <!-- 1. Landing page -->
     <div id="landing-content">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">S</span>
+                <span>SilentSpace</span>
+            </div>
+        </header>
+
         <main class="container">
-            <div class="logo">S</div>
-            <h1>Welcome to SilentSpace</h1>
+            <div class="logo" aria-hidden="true">S</div>
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Your language journey
+            </div>
+
+            <h1>
+                Find your voice.<br>
+                <span>Discover a world.</span>
+            </h1>
+
             <p class="subtitle">
-                Your space to learn languages, practise conversation,
-                and book your next online lesson.
+                A quieter space to grow your language skills,
+                practise real conversations, and connect with
+                tutors for your next online lesson.
             </p>
-            <!-- Clicking this will hide the landing page and show the App -->
-            <button onclick="startApp()" class="login-button">LOG IN</button>
-            <p class="footer">Learn at your own pace. Speak with confidence.</p>
+
+            <!-- Existing login action preserved -->
+            <button
+                type="button"
+                onclick="startApp()"
+                class="login-button"
+            >
+                <span>LOG IN TO YOUR SPACE</span>
+                <span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+
+            <p class="trust-note">
+                <span class="trust-icon" aria-hidden="true">✳</span>
+                Learn at your own pace. Speak with confidence.
+            </p>
         </main>
+
+        <footer class="footer">
+            A little progress every day goes a long way.
+        </footer>
     </div>
 
-    <!-- 2. The App Section -->
+    <!-- 2. App section — preserved -->
     <div id="compose-receiver"></div>
 
     <script>
@@ -138,14 +426,14 @@
             document.body.style.overflow = 'hidden'; // App handles its own scrolling
         }
 
-        // IMPORTANT: If returning from payment, skip the landing page 
+        // IMPORTANT: If returning from payment, skip the landing page
         // and go straight to the app so Supabase registration can run.
         if (window.location.search.includes('payment=success')) {
             startApp();
         }
     </script>
-    
-    <!-- 3. Load the Kotlin Application -->
+
+    <!-- 3. Load the Kotlin application — preserved -->
     <script src="webApp.js"></script>
 </body>
 </html>
