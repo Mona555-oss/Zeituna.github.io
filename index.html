@@ -1,5 +1,3 @@
-<script>
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,15 +20,32 @@
             padding: 0;
         }
 
-        body {
-            min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
+        html, body {
+            width: 100%;
+            height: 100%;
             background: var(--cream);
-            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* The App Container - Hidden until Login is clicked or payment is finished */
+        #compose-receiver {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Landing Page Container */
+        #landing-content {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .container {
@@ -80,6 +95,8 @@
             border-radius: 7px;
             box-shadow: 0 3px 5px rgba(50, 60, 30, 0.18);
             transition: background 0.2s, transform 0.2s;
+            cursor: pointer;
+            border: none;
         }
 
         .login-button:hover {
@@ -96,28 +113,39 @@
 </head>
 
 <body>
-    <main class="container">
+    <!-- 1. The Landing Page Section -->
+    <div id="landing-content">
+        <main class="container">
+            <div class="logo">S</div>
+            <h1>Welcome to SilentSpace</h1>
+            <p class="subtitle">
+                Your space to learn languages, practise conversation,
+                and book your next online lesson.
+            </p>
+            <!-- Clicking this will hide the landing page and show the App -->
+            <button onclick="startApp()" class="login-button">LOG IN</button>
+            <p class="footer">Learn at your own pace. Speak with confidence.</p>
+        </main>
+    </div>
 
-        <div class="logo" aria-label="SilentSpace logo">
-            S
-        </div>
+    <!-- 2. The App Section -->
+    <div id="compose-receiver"></div>
 
-        <h1>Welcome to SilentSpace</h1>
+    <script>
+        function startApp() {
+            document.getElementById('landing-content').style.display = 'none';
+            document.getElementById('compose-receiver').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // App handles its own scrolling
+        }
 
-        <p class="subtitle">
-            Your space to learn languages, practise conversation,
-            and book your next online lesson.
-        </p>
-
-        <!-- Change login.html to the actual login page path later -->
-        <a href="login.html" class="login-button">
-            LOG IN
-        </a>
-
-        <p class="footer">
-            Learn at your own pace. Speak with confidence.
-        </p>
-
-    </main>
+        // IMPORTANT: If returning from payment, skip the landing page 
+        // and go straight to the app so Supabase registration can run.
+        if (window.location.search.includes('payment=success')) {
+            startApp();
+        }
+    </script>
+    
+    <!-- 3. Load the Kotlin Application -->
+    <script src="webApp.js"></script>
 </body>
 </html>
