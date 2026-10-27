@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#F7F5EC">
-    <meta name="description" content="SilentSpace helps you learn languages, practise conversation, and book online lessons at your own pace.">
-
-    <title>SilentSpace — Your Language Journey Starts Here</title>
+    <title>Zeituna — Your Language Journey Starts Here</title>
 
     <style>
         :root {
             --cream: #F7F5EC;
-            --cream-dark: #EEEBDD;
             --olive: #596B35;
             --olive-dark: #46552A;
             --olive-light: #E8EDDF;
@@ -19,421 +16,177 @@
             --muted: #747966;
             --white: #FFFDF8;
             --border: rgba(89, 107, 53, 0.14);
-            --shadow: 0 24px 70px rgba(48, 57, 32, 0.08);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html,
-        body {
-            width: 100%;
-            min-height: 100%;
-            background: var(--cream);
-        }
-
-        body {
-            font-family: Inter, -apple-system, BlinkMacSystemFont,
-                "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
-
-        button {
-            font: inherit;
-        }
-
-        /* App container — hidden until login or payment success */
-        #compose-receiver {
-            display: none;
+        html, body {
             width: 100%;
             height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
+            background: var(--cream);
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Landing page */
+        /* App container — Rendered underneath to ensure it loads properly */
+        #compose-receiver {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            display: block;
+        }
+
+        /* Landing page — Overlay on top */
         #landing-content {
             position: relative;
+            z-index: 10;
             min-height: 100vh;
-            min-height: 100svh;
+            background: var(--cream);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 32px 24px;
-            overflow: hidden;
-            isolation: isolate;
-        }
-
-        /* Soft background decoration */
-        #landing-content::before,
-        #landing-content::after {
-            content: "";
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        #landing-content::before {
-            width: 420px;
-            height: 420px;
-            top: -230px;
-            right: -150px;
-            background: rgba(89, 107, 53, 0.07);
-        }
-
-        #landing-content::after {
-            width: 360px;
-            height: 360px;
-            bottom: -220px;
-            left: -140px;
-            background: rgba(192, 176, 125, 0.12);
-        }
-
-        .topbar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 27px 32px;
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--olive);
-            font-size: 17px;
-            font-weight: 750;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-mark {
-            display: grid;
-            place-items: center;
-            width: 34px;
-            height: 34px;
-            border-radius: 11px;
-            background: var(--olive);
-            color: var(--white);
-            font-size: 19px;
-            font-weight: 700;
+            padding: 40px 24px;
+            transition: opacity 0.4s ease;
         }
 
         .container {
             width: 100%;
-            max-width: 480px;
-            margin: 55px auto 30px;
+            max-width: 440px;
             text-align: center;
-            animation: fade-up 0.7s ease both;
+            animation: fade-up 0.8s ease;
         }
 
         .logo {
-            width: 82px;
-            height: 82px;
-            margin: 0 auto 28px;
-            border-radius: 25px;
+            width: 80px; height: 80px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
             background: var(--olive);
-            display: grid;
-            place-items: center;
-            color: var(--cream);
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 43px;
-            font-weight: 500;
-            box-shadow: 0 12px 28px rgba(50, 60, 30, 0.17);
-            transform: rotate(-4deg);
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 19px;
-            padding: 8px 13px;
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            background: rgba(255, 253, 248, 0.65);
-            color: var(--olive);
-            font-size: 11px;
-            font-weight: 750;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .eyebrow-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #82965A;
+            display: grid; place-items: center;
+            color: var(--white);
+            font-family: Georgia, serif;
+            font-size: 40px;
+            box-shadow: 0 10px 20px rgba(50, 60, 30, 0.15);
         }
 
         h1 {
-            max-width: 450px;
-            margin: 0 auto 18px;
+            font-family: Georgia, serif;
+            font-size: 42px;
             color: var(--text);
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: clamp(39px, 7vw, 57px);
-            font-weight: 500;
-            letter-spacing: -2px;
             line-height: 1.1;
+            margin-bottom: 16px;
         }
 
-        h1 span {
-            color: var(--olive);
-            font-style: italic;
-        }
+        h1 span { color: var(--olive); font-style: italic; }
 
         .subtitle {
-            max-width: 390px;
-            margin: 0 auto 32px;
             color: var(--muted);
             font-size: 15px;
-            line-height: 1.9;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
-        .login-button {
+        /* Image Placeholder */
+        .hero-image {
+            width: 100%;
+            height: 220px;
+            border-radius: 20px;
+            background: var(--olive-light);
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+        }
+
+        .hero-image img {
             width: 100%;
-            min-height: 58px;
-            padding: 17px 24px;
-            border: 1px solid var(--olive);
-            border-radius: 10px;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-image::after {
+            content: "Upload image here";
+            color: var(--olive);
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 18px;
             background: var(--olive);
             color: var(--white);
-            font-size: 13px;
-            font-weight: 750;
-            letter-spacing: 1.4px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
             cursor: pointer;
-            box-shadow: 0 7px 18px rgba(50, 60, 30, 0.13);
-            transition:
-                background 0.2s ease,
-                box-shadow 0.2s ease,
-                transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(50, 60, 30, 0.2);
+            transition: all 0.2s ease;
         }
 
         .login-button:hover {
             background: var(--olive-dark);
-            box-shadow: 0 10px 24px rgba(50, 60, 30, 0.19);
             transform: translateY(-2px);
         }
 
-        .login-button:active {
-            transform: translateY(0);
-        }
-
-        .login-button:focus-visible {
-            outline: 3px solid rgba(89, 107, 53, 0.35);
-            outline-offset: 4px;
-        }
-
-        .button-arrow {
-            font-size: 19px;
-            font-weight: 400;
-            line-height: 1;
-            transition: transform 0.2s ease;
-        }
-
-        .login-button:hover .button-arrow {
-            transform: translateX(4px);
-        }
-
-        .trust-note {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 18px;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .trust-icon {
-            color: var(--olive);
-            font-size: 15px;
-        }
-
         .footer {
-            position: absolute;
-            right: 24px;
-            bottom: 23px;
-            left: 24px;
-            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
             color: #898C7A;
-            font-size: 11px;
-            letter-spacing: 0.3px;
         }
 
         @keyframes fade-up {
-            from {
-                opacity: 0;
-                transform: translateY(14px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 480px) {
-            #landing-content {
-                padding: 28px 24px;
-            }
-
-            .topbar {
-                padding: 22px 24px;
-            }
-
-            .container {
-                margin-top: 45px;
-            }
-
-            .logo {
-                width: 72px;
-                height: 72px;
-                border-radius: 22px;
-                font-size: 38px;
-                margin-bottom: 25px;
-            }
-
-            h1 {
-                font-size: clamp(36px, 10vw, 45px);
-                letter-spacing: -1.5px;
-            }
-
-            .subtitle {
-                font-size: 14px;
-                line-height: 1.8;
-                margin-bottom: 27px;
-            }
-
-            .footer {
-                font-size: 10px;
-                bottom: 16px;
-            }
-        }
-
-        @media (max-height: 650px) {
-            #landing-content {
-                justify-content: flex-start;
-                overflow-y: auto;
-            }
-
-            .container {
-                margin-top: 65px;
-                margin-bottom: 55px;
-            }
-
-            .logo {
-                width: 62px;
-                height: 62px;
-                margin-bottom: 20px;
-                font-size: 34px;
-            }
-
-            h1 {
-                font-size: clamp(34px, 6vw, 44px);
-            }
-
-            .subtitle {
-                margin-bottom: 22px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
-                transition-duration: 0.01ms !important;
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
-    <!-- 1. Landing page -->
-    <div id="landing-content">
-        <header class="topbar">
-            <div class="brand">
-                <span class="brand-mark" aria-hidden="true">S</span>
-                <span>SilentSpace</span>
-            </div>
-        </header>
-
-        <main class="container">
-            <div class="logo" aria-hidden="true">S</div>
-
-            <div class="eyebrow">
-                <span class="eyebrow-dot"></span>
-                Your language journey
-            </div>
-
-            <h1>
-                Find your voice.<br>
-                <span>Discover a world.</span>
-            </h1>
-
-            <p class="subtitle">
-                A quieter space to grow your language skills,
-                practise real conversations, and connect with
-                tutors for your next online lesson.
-            </p>
-
-            <!-- Existing login action preserved -->
-            <button
-                type="button"
-                onclick="startApp()"
-                class="login-button"
-            >
-                <span>LOG IN TO YOUR SPACE</span>
-                <span class="button-arrow" aria-hidden="true">→</span>
-            </button>
-
-            <p class="trust-note">
-                <span class="trust-icon" aria-hidden="true">✳</span>
-                Learn at your own pace. Speak with confidence.
-            </p>
-        </main>
-
-        <footer class="footer">
-            A little progress every day goes a long way.
-        </footer>
-    </div>
-
-    <!-- 2. App section — preserved -->
+    <!-- App receiver stays at the bottom level -->
     <div id="compose-receiver"></div>
+
+    <!-- Landing content stays on top until Log In is clicked -->
+    <div id="landing-content">
+        <main class="container">
+            <div class="logo">S</div>
+            <h1>Find your voice.<br><span>Discover a world.</span></h1>
+            <p class="subtitle">
+                A quieter space to grow your language skills, practise conversations,
+                and connect with tutors for your next online lesson.
+            </p>
+
+            <!-- IMAGE SPACE: Update 'src' with your image file name -->
+            <div class="hero-image">
+                <img src="feature-graphic.png" alt="Two people speaking" onerror="this.style.display='none'">
+            </div>
+
+            <button onclick="startApp()" class="login-button">LOG IN →</button>
+            <p class="footer">Learn at your own pace. Speak with confidence.</p>
+        </main>
+    </div>
 
     <script>
         function startApp() {
-            document.getElementById('landing-content').style.display = 'none';
-            document.getElementById('compose-receiver').style.display = 'block';
-            document.body.style.overflow = 'hidden'; // App handles its own scrolling
+            const landing = document.getElementById('landing-content');
+            landing.style.opacity = '0';
+            setTimeout(() => {
+                landing.style.display = 'none';
+                document.body.style.overflow = 'hidden';
+            }, 400);
         }
 
-        // IMPORTANT: If returning from payment, skip the landing page
-        // and go straight to the app so Supabase registration can run.
+        // Auto-start app if returning from PayPal so registration completes
         if (window.location.search.includes('payment=success')) {
-            startApp();
+            document.getElementById('landing-content').style.display = 'none';
         }
     </script>
 
-    <!-- 3. Load the Kotlin application — preserved -->
+    <!-- Load the application logic once -->
     <script src="webApp.js"></script>
 </body>
 </html>
