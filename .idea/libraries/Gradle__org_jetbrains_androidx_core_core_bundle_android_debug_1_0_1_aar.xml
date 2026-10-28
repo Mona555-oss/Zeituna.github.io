@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.androidx.core:core-bundle-android-debug:1.0.1@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.13/transforms/aa073874627319713895a978c815977d/transformed/core-bundle-debug/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.13/transforms/aa073874627319713895a978c815977d/transformed/core-bundle-debug/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.13/transforms/aa073874627319713895a978c815977d/transformed/core-bundle-debug/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.core/core-bundle-android-debug/1.0.1/b0f9d12b22d901d854e38566e73d017a6bbb46c6/core-bundle-android-debug-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-websocket-serialization:commonMain:3.0.1" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-websocket-serialization" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/io.ktor-ktor-websocket-serialization-3.0.1-commonMain-6RXyCg.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websocket-serialization/3.0.1/3f7984d5ab7712ab7cae3adbfc3a3ca636ce726c/ktor-websocket-serialization-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

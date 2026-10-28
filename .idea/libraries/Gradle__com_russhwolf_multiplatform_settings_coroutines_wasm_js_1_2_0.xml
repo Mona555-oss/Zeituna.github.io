@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.russhwolf:multiplatform-settings-coroutines-wasm-js:1.2.0" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="com.russhwolf" artifactId="multiplatform-settings-coroutines-wasm-js" version="1.2.0" baseVersion="1.2.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.russhwolf/multiplatform-settings-coroutines-wasm-js/1.2.0/34c1f6a0ae7353e6cd2d02dabc9f113fe3d12319/multiplatform-settings-coroutines-wasm-js-1.2.0.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.russhwolf/multiplatform-settings-coroutines-wasm-js/1.2.0/b37d54b7afcfac7ed096af92a748296f63ae1256/multiplatform-settings-coroutines-wasm-js-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

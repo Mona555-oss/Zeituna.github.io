@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":webApp:wasmJsMain" external.linked.project.path="$MODULE_DIR$/../../../webApp" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="SilentSpace" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet external-system-id="GRADLE" type="kotlin-language" name="Kotlin">
+      <configuration version="5" platform="Wasm" allPlatforms="wasm-js [JS]" useProjectSettings="false" isTestModule="false" externalProjectId=":webApp" isHmppProject="true">
+        <dependsOnModuleNames>:webApp:commonMain</dependsOnModuleNames>
+        <sourceSets>
+          <sourceSet>SilentSpace.webApp.commonMain</sourceSet>
+        </sourceSets>
+        <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
+        <productionOutputPath>$MODULE_DIR$/../../../webApp/build/classes/kotlin/wasmJs/main</productionOutputPath>
+        <testOutputPath>$MODULE_DIR$/../../../webApp/build/classes/kotlin/wasmJs/main</testOutputPath>
+        <compilerSettings>
+          <option name="additionalArguments" value="-Xir-module-name=SilentSpace:webApp -Xir-per-module-output-name=webApp -Xir-produce-klib-dir -main call -Xwasm -Xwasm-target=wasm-js" />
+        </compilerSettings>
+        <compilerArguments>
+          <flagArguments>
+            <flagArg name="sourceMap" arg="true" />
+            <flagArg name="multiPlatform" arg="true" />
+          </flagArguments>
+          <stringArguments>
+            <stringArg name="moduleName" arg="webApp" />
+            <stringArg name="outputDir" arg="$MODULE_DIR$/../../../webApp/build/classes/kotlin/wasmJs/main" />
+            <stringArg name="sourceMapEmbedSources" arg="never" />
+            <stringArg name="target" arg="es5" />
+            <stringArg name="apiVersion" arg="2.0" />
+            <stringArg name="languageVersion" arg="2.0" />
+          </stringArguments>
+          <arrayArguments>
+            <arrayArg name="fragmentRefines">
+              <args>wasmJsMain:commonMain</args>
+            </arrayArg>
+            <arrayArg name="fragments">
+              <args>
+                <arg>wasmJsMain</arg>
+                <arg>commonMain</arg>
+              </args>
+            </arrayArg>
+            <arrayArg name="pluginClasspaths">
+              <args>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compose-compiler-plugin-embeddable/2.0.21/e14f003d962fb25693b461de59490c91072a7979/kotlin-compose-compiler-plugin-embeddable-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/2.0.21/939d8b644308f8d97c60317df76ee40299475831/kotlin-scripting-jvm-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/2.0.21/2aeb50e2df2ef94f6b90b7ab2c56d5e18d3687c1/kotlin-scripting-common-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.0.21/618b539767b4899b4660a83006e052b63f1db551/kotlin-stdlib-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.0.21/c9b044380ad41f89aa89aa896c2d32a8c0b2129d/kotlin-script-runtime-2.0.21.jar</arg>
+              </args>
+            </arrayArg>
+            <arrayArg name="pluginOptions">
+              <args>
+                <arg>plugin:androidx.compose.compiler.plugins.kotlin:generateFunctionKeyMetaClasses=false</arg>
+                <arg>plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false</arg>
+                <arg>plugin:androidx.compose.compiler.plugins.kotlin:traceMarkersEnabled=true</arg>
+              </args>
+            </arrayArg>
+          </arrayArguments>
+        </compilerArguments>
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../../webApp/build/classes/kotlin/wasmJs/main" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../webApp/build/kotlin-multiplatform-resources/aggregated-resources/wasmJs">
+      <sourceFolder url="file://$MODULE_DIR$/../../../webApp/build/kotlin-multiplatform-resources/aggregated-resources/wasmJs" type="kotlin-resource" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../webApp/src/wasmJsMain">
+      <sourceFolder url="file://$MODULE_DIR$/../../../webApp/src/wasmJsMain/kotlin" type="kotlin-source" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../webApp/src/wasmJsMain/resources" type="kotlin-resource" />
+    </content>
+    <orderEntry type="jdk" jdkName="Kotlin SDK" jdkType="KotlinSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="SilentSpace.webApp.commonMain" />
+    <orderEntry type="module" module-name="SilentSpace.shared.commonMain" />
+    <orderEntry type="module" module-name="SilentSpace.shared.wasmJsMain" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.material:material-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.material:material-ripple-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.foundation:foundation-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.animation:animation-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.material:material-icons-core-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.foundation:foundation-layout-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-browser-wasm-js:0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.animation:animation-core-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-wasm-js:1.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:atomicfu-wasm-js:0.23.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.runtime:runtime-saveable-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-wasm-js:2.0.21" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.runtime:runtime-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-text-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-graphics-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-unit-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.skiko:skiko-wasm-js:0.8.15" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-geometry-wasm-js:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-util-wasm-js:1.7.0" level="project" />
+  </component>
+</module>

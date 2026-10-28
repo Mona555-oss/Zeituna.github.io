@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.androidx.savedstate:savedstate-wasm-js:1.2.2" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.androidx.savedstate" artifactId="savedstate-wasm-js" version="1.2.2" baseVersion="1.2.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.savedstate/savedstate-wasm-js/1.2.2/deaffc3a1b8e3023bba012e064c63c417c45c293/savedstate-wasm-js-1.2.2.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.savedstate/savedstate-wasm-js/1.2.2/d23ceac73ab25929ba642484d63a6d6da0cefbd4/savedstate-wasm-js-1.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

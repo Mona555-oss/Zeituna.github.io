@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.kotlinx:kotlinx-browser-wasm-js:0.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.kotlinx" artifactId="kotlinx-browser-wasm-js" version="0.1" baseVersion="0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-browser-wasm-js/0.1/546fc8fbc296c4b18d2719f869bc483f5fcbc0d9/kotlinx-browser-wasm-js-0.1-javadoc.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-browser-wasm-js/0.1/c6e62c78f098c5c14beb4d5002a49d4b038cca37/kotlinx-browser-wasm-js-0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

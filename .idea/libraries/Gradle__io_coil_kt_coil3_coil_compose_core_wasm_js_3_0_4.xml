@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.coil-kt.coil3:coil-compose-core-wasm-js:3.0.4" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="io.coil-kt.coil3" artifactId="coil-compose-core-wasm-js" version="3.0.4" baseVersion="3.0.4" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.coil-kt.coil3/coil-compose-core-wasm-js/3.0.4/669795682b5ec1d3fe4acbe80c2c0bfc755aefab/coil-compose-core-wasm-js-3.0.4.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.coil-kt.coil3/coil-compose-core-wasm-js/3.0.4/cb89fa39feb488e509e46f2c4e8a819363893ab8/coil-compose-core-wasm-js-3.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

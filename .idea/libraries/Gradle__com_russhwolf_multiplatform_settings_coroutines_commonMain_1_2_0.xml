@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.russhwolf:multiplatform-settings-coroutines:commonMain:1.2.0" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="com.russhwolf" artifactId="multiplatform-settings-coroutines" version="1.2.0" baseVersion="1.2.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/com.russhwolf-multiplatform-settings-coroutines-1.2.0-commonMain-Hextog.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.russhwolf/multiplatform-settings-coroutines/1.2.0/175486e5fd7a0e92d685f4a723c2c492cd81d38e/multiplatform-settings-coroutines-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

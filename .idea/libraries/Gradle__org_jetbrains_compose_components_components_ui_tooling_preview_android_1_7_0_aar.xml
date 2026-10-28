@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.compose.components:components-ui-tooling-preview-android:1.7.0@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.13/transforms/1edeee8d8bb65816dc60a8834518f5e6/transformed/library-release/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.13/transforms/1edeee8d8bb65816dc60a8834518f5e6/transformed/library-release/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.components/components-ui-tooling-preview-android/1.7.0/5dc49d20e2c19a9b02c4e528ba877067e6f443f9/library-android-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

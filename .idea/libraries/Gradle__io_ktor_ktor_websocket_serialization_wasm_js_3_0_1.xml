@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-websocket-serialization-wasm-js:3.0.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-websocket-serialization-wasm-js" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websocket-serialization-wasm-js/3.0.1/b5447189c4537d87fc7245f9455a65a4720e76cd/ktor-websocket-serialization-wasm-js-3.0.1.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websocket-serialization-wasm-js/3.0.1/3f7984d5ab7712ab7cae3adbfc3a3ca636ce726c/ktor-websocket-serialization-wasm-js-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

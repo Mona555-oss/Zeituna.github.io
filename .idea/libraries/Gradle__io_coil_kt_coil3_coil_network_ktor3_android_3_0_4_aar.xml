@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.coil-kt.coil3:coil-network-ktor3-android:3.0.4@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.13/transforms/e2e73fc9788bb7f868fbd557747fa9da/transformed/coil-network-ktor3-release/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.13/transforms/e2e73fc9788bb7f868fbd557747fa9da/transformed/coil-network-ktor3-release/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.coil-kt.coil3/coil-network-ktor3-android/3.0.4/fe05b74c1f7dcea73834ab506067dc1374495622/coil-network-ktor3-android-3.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

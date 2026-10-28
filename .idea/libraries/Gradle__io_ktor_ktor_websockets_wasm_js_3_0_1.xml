@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-websockets-wasm-js:3.0.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-websockets-wasm-js" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websockets-wasm-js/3.0.1/3f0b40f1d0572b5aac8647e9f76ce85c4fa17ab7/ktor-websockets-wasm-js-3.0.1.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websockets-wasm-js/3.0.1/ade533e2f763ea36e64122438776d89029a7decc/ktor-websockets-wasm-js-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

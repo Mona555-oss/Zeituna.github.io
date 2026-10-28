@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.jan-tennert.supabase:supabase-kt-android-debug:3.0.1@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.13/transforms/1552f53c7787f490a381a1bb54839c89/transformed/supabase-kt-debug/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.13/transforms/1552f53c7787f490a381a1bb54839c89/transformed/supabase-kt-debug/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/supabase-kt-android-debug/3.0.1/1c48db847a78b35d8e1e0256f351bc897f54bc70/supabase-kt-android-debug-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

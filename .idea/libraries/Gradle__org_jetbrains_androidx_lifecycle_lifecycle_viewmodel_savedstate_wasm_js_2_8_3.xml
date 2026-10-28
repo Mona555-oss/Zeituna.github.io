@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate-wasm-js:2.8.3" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.androidx.lifecycle" artifactId="lifecycle-viewmodel-savedstate-wasm-js" version="2.8.3" baseVersion="2.8.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-savedstate-wasm-js/2.8.3/92a2974eb4a6a41071a43e477ef4dd0856fb13f5/lifecycle-viewmodel-savedstate-wasm-js-2.8.3.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.lifecycle/lifecycle-viewmodel-savedstate-wasm-js/2.8.3/4dc8ee91dde72f9ae81c88eb9dffe44455c4ea1e/lifecycle-viewmodel-savedstate-wasm-js-2.8.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

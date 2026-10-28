@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.kotlin:kotlin-test-wasm-js:2.0.21" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.kotlin" artifactId="kotlin-test-wasm-js" version="2.0.21" baseVersion="2.0.21" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-wasm-js/2.0.21/1333616cae00c19aa54866cb1e62d83e3cdb02b3/kotlin-test-wasm-js-2.0.21.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-wasm-js/2.0.21/c5d568a5c266d0abe55bc37c80f3b58d3b438661/kotlin-test-wasm-js-2.0.21-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

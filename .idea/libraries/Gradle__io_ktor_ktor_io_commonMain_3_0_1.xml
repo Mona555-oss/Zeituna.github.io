@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-io:commonMain:3.0.1" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-io" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/io.ktor-ktor-io-3.0.1-commonMain-BYlo6A.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-io/3.0.1/77f4a525ba1cd8bd04a02f4d4f7074bf02d28401/ktor-io-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

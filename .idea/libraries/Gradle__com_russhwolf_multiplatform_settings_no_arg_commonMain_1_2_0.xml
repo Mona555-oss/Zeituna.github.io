@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.russhwolf:multiplatform-settings-no-arg:commonMain:1.2.0" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="com.russhwolf" artifactId="multiplatform-settings-no-arg" version="1.2.0" baseVersion="1.2.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/com.russhwolf-multiplatform-settings-no-arg-1.2.0-commonMain-XBDWWw.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.russhwolf/multiplatform-settings-no-arg/1.2.0/e6355e0cab1dac258f2ce25958ff48807699e09c/multiplatform-settings-no-arg-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

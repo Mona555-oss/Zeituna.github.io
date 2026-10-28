@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.compose.material:material:commonMain:1.7.0" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.compose.material" artifactId="material" version="1.7.0" baseVersion="1.7.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.compose.material-material-1.7.0-commonMain-G6kTFA.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.material/material/1.7.0/87b2e4f7ece6e53343ff6de9d8ded7518ab22654/material-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

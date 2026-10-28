@@ -137,13 +137,21 @@ object BookititApiService {
                 setBody(FormDataContent(Parameters.build {
                     append("p_sAgendaID", cleanAgendaId)
                     append("p_sServiceID", cleanServiceId)
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> parent of c193c22 (fixing calendar fetch)
                     // Parameters names matched EXACTLY to the addevent documentation screenshot
                     append("p_dStartDate", request.date.trim())
                     append("p_dEndDate", request.date.trim())
                     append("p_iStartTime", startMins.toString())
                     append("p_iEndTime", endMins.toString())
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> parent of c193c22 (fixing calendar fetch)
                     append("p_sComments", "App Booking")
 
                     if (!request.clientId.isNullOrBlank()) {
@@ -153,7 +161,11 @@ object BookititApiService {
                         append("p_sClientName", request.name.trim())
                         append("p_sClientEmail", request.email.trim())
                     }
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> parent of c193c22 (fixing calendar fetch)
                     // Force JSON response via body parameter
                     append("format", "json")
                 }))

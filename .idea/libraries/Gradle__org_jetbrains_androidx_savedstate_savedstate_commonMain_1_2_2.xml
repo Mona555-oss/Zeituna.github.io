@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.androidx.savedstate:savedstate:commonMain:1.2.2" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.androidx.savedstate" artifactId="savedstate" version="1.2.2" baseVersion="1.2.2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.androidx.savedstate-savedstate-1.2.2-commonMain-rDkiiA.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.savedstate/savedstate/1.2.2/793d22e543982a96224ada3d8491b8010d6e7a2/savedstate-1.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

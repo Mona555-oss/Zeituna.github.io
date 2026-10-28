@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.jan-tennert.supabase:storage-kt-wasm-js:3.0.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="io.github.jan-tennert.supabase" artifactId="storage-kt-wasm-js" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/storage-kt-wasm-js/3.0.1/291bd8a187b3eb74fd193b542b08b73ff4957f6e/storage-kt-wasm-js-3.0.1.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/storage-kt-wasm-js/3.0.1/5a48f339019396f4a8eb9be69b9213cdee00e083/storage-kt-wasm-js-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

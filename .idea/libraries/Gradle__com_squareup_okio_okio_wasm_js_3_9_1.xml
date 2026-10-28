@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.squareup.okio:okio-wasm-js:3.9.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="com.squareup.okio" artifactId="okio-wasm-js" version="3.9.1" baseVersion="3.9.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-wasm-js/3.9.1/a0da976116303b5b2252926133f67335a71beebd/okio-wasm-js-3.9.1.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-wasm-js/3.9.1/ce13e545afff135ae0f39879972a49daec136a97/okio-wasm-js-3.9.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

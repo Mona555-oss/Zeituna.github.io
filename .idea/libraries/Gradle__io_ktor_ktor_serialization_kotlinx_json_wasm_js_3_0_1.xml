@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-serialization-kotlinx-json-wasm-js:3.0.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-serialization-kotlinx-json-wasm-js" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-kotlinx-json-wasm-js/3.0.1/43569004912c26a74cbd11b31a5e67b91d84b82e/ktor-serialization-kotlinx-json-wasm-js-3.0.1.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-kotlinx-json-wasm-js/3.0.1/f3ba799ef178c41a1144a39c7ec09fc65b4696d6/ktor-serialization-kotlinx-json-wasm-js-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

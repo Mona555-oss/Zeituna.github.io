@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.kotlinx:kotlinx-serialization-json-wasm-js:1.7.3" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.kotlinx" artifactId="kotlinx-serialization-json-wasm-js" version="1.7.3" baseVersion="1.7.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-wasm-js/1.7.3/1ced9e7def1e221b5a89bdef4a41f8faef2d9e0c/kotlinx-serialization-json-wasm-js-1.7.3.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-wasm-js/1.7.3/ef9d05aec4551b92705561bb2e9eb3b6575bbcc0/kotlinx-serialization-json-wasm-js-1.7.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

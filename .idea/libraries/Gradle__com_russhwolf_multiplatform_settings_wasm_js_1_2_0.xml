@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.russhwolf:multiplatform-settings-wasm-js:1.2.0" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="com.russhwolf" artifactId="multiplatform-settings-wasm-js" version="1.2.0" baseVersion="1.2.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.russhwolf/multiplatform-settings-wasm-js/1.2.0/55ba70f2767aa428546a779dbdce2445b598384a/multiplatform-settings-wasm-js-1.2.0.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.russhwolf/multiplatform-settings-wasm-js/1.2.0/309c72b85b1ac43ee5ea4444f2a47c23b17e0198/multiplatform-settings-wasm-js-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

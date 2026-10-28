@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.jan-tennert.supabase:auth-kt:commonMain:3.0.1" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="io.github.jan-tennert.supabase" artifactId="auth-kt" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/io.github.jan-tennert.supabase-auth-kt-3.0.1-commonMain-GS7Mvw.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/auth-kt/3.0.1/47c7759fdf0a21a6a18a8f645e47d191122ae6a9/auth-kt-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

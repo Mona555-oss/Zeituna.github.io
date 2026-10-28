@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.androidx.core:core-bundle:commonMain:1.0.1" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.androidx.core" artifactId="core-bundle" version="1.0.1" baseVersion="1.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.androidx.core-core-bundle-1.0.1-commonMain-fXRodQ.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.androidx.core/core-bundle/1.0.1/62e5b47d4a510712c2a44b0bd05077814ecd9a13/core-bundle-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

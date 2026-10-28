@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: co.touchlab:kermit-core-wasm-js:2.0.4" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="co.touchlab" artifactId="kermit-core-wasm-js" version="2.0.4" baseVersion="2.0.4" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.touchlab/kermit-core-wasm-js/2.0.4/50fb298213d30e7e9f1bdf813b8b6235f05b016c/kermit-core-wasm-js-2.0.4.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.touchlab/kermit-core-wasm-js/2.0.4/36533b60c75c44febd8ed65e9528b339557ff1a7/kermit-core-wasm-js-2.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

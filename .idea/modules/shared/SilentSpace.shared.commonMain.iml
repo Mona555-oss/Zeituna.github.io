@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":shared:commonMain" external.linked.project.path="$MODULE_DIR$/../../../shared" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="SilentSpace" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet external-system-id="GRADLE" type="kotlin-language" name="Kotlin">
+      <configuration version="5" platform="Common (experimental) " allPlatforms="JVM [11]/wasm-js [JS]" useProjectSettings="false" isTestModule="false" externalProjectId=":shared" isHmppProject="true">
+        <newMppModelJpsModuleKind>SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
+        <compilerSettings />
+        <compilerArguments>
+          <flagArguments>
+            <flagArg name="multiPlatform" arg="true" />
+          </flagArguments>
+          <stringArguments>
+            <stringArg name="apiVersion" arg="2.0" />
+            <stringArg name="languageVersion" arg="2.0" />
+          </stringArguments>
+          <arrayArguments>
+            <arrayArg name="pluginClasspaths">
+              <args>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-serialization-compiler-plugin-embeddable/2.0.21/f921e430f2ca63ead1c5640ada25411d06618bfb/kotlin-serialization-compiler-plugin-embeddable-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compose-compiler-plugin-embeddable/2.0.21/e14f003d962fb25693b461de59490c91072a7979/kotlin-compose-compiler-plugin-embeddable-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/2.0.21/939d8b644308f8d97c60317df76ee40299475831/kotlin-scripting-jvm-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/2.0.21/2aeb50e2df2ef94f6b90b7ab2c56d5e18d3687c1/kotlin-scripting-common-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.0.21/618b539767b4899b4660a83006e052b63f1db551/kotlin-stdlib-2.0.21.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.0.21/c9b044380ad41f89aa89aa896c2d32a8c0b2129d/kotlin-script-runtime-2.0.21.jar</arg>
+              </args>
+            </arrayArg>
+            <arrayArg name="pluginOptions">
+              <args>
+                <arg>plugin:androidx.compose.compiler.plugins.kotlin:generateFunctionKeyMetaClasses=false</arg>
+                <arg>plugin:androidx.compose.compiler.plugins.kotlin:traceMarkersEnabled=true</arg>
+              </args>
+            </arrayArg>
+          </arrayArguments>
+        </compilerArguments>
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../shared/build/generated/compose/resourceGenerator/kotlin/commonMainResourceAccessors">
+      <sourceFolder url="file://$MODULE_DIR$/../../../shared/build/generated/compose/resourceGenerator/kotlin/commonMainResourceAccessors" type="kotlin-source" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../shared/build/generated/compose/resourceGenerator/kotlin/commonMainResourceCollectors">
+      <sourceFolder url="file://$MODULE_DIR$/../../../shared/build/generated/compose/resourceGenerator/kotlin/commonMainResourceCollectors" type="kotlin-source" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../shared/build/generated/compose/resourceGenerator/kotlin/commonResClass">
+      <sourceFolder url="file://$MODULE_DIR$/../../../shared/build/generated/compose/resourceGenerator/kotlin/commonResClass" type="kotlin-source" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../shared/src/commonMain">
+      <sourceFolder url="file://$MODULE_DIR$/../../../shared/src/commonMain/kotlin" type="kotlin-source" />
+    </content>
+    <orderEntry type="jdk" jdkName="Kotlin SDK" jdkType="KotlinSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:commonMain:2.0.21" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.jan-tennert.supabase:auth-kt:settingsMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.jan-tennert.supabase:auth-kt:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.jan-tennert.supabase:postgrest-kt:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.jan-tennert.supabase:storage-kt:settingsMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.jan-tennert.supabase:storage-kt:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-client-core:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-client-content-negotiation:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-serialization-kotlinx-json:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-serialization-json:commonMain:1.7.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-datetime:commonMain:0.6.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.runtime:runtime:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.foundation:foundation:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.material:material:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.components:components-resources:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.components:components-ui-tooling-preview:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:commonMain:2.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:commonMain:2.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:commonMain:2.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil-compose:commonMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil-network-ktor3:commonMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.jan-tennert.supabase:supabase-kt:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.russhwolf:multiplatform-settings-no-arg:commonMain:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.russhwolf:multiplatform-settings-coroutines:commonMain:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core:commonMain:1.9.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-http:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-events:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-websocket-serialization:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-sse:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-serialization:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-serialization-kotlinx:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-serialization-json-io:commonMain:1.7.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-serialization-core:commonMain:1.7.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.animation:animation:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.animation:animation-core:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.material:material-icons-core:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.material:material-ripple:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-text:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.runtime:runtime-saveable:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-geometry:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-graphics:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-unit:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.ui:ui-util:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.annotation-internal:annotation:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-runtime:commonMain:2.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-common:commonMain:2.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:commonMain:2.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.savedstate:savedstate:commonMain:1.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil:commonMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil-compose-core:commonMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil-core:nonNativeMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil-core:commonMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.coil-kt.coil3:coil-network-core:commonMain:3.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: co.touchlab:kermit:commonMain:2.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:atomicfu:commonMain:0.25.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.russhwolf:multiplatform-settings:commonMain:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-utils:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-websockets:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.compose.foundation:foundation-layout:commonMain:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.androidx.core:core-bundle:commonMain:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.squareup.okio:okio:commonMain:3.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: co.touchlab:kermit-core:commonMain:2.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-io:commonMain:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-io-core:commonMain:0.5.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-io-bytestring:commonMain:0.5.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:2.0.21" level="project" />
+  </component>
+</module>

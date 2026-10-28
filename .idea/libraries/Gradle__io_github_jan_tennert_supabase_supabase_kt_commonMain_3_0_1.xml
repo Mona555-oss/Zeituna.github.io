@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.jan-tennert.supabase:supabase-kt:commonMain:3.0.1" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="io.github.jan-tennert.supabase" artifactId="supabase-kt" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/io.github.jan-tennert.supabase-supabase-kt-3.0.1-commonMain-tyJYDQ.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/supabase-kt/3.0.1/729546daf63b77b2acc3937f4190a6eb2605cc5f/supabase-kt-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

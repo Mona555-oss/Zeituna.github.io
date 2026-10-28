@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.jan-tennert.supabase:storage-kt:commonMain:3.0.1" type="kotlin.common" external-system-id="GRADLE">
+    <properties groupId="io.github.jan-tennert.supabase" artifactId="storage-kt" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.kotlin/metadata/kotlinTransformedMetadataLibraries/io.github.jan-tennert.supabase-storage-kt-3.0.1-commonMain-xT1wVw.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/storage-kt/3.0.1/9c18ea1c7a6dfdfd5736fc168e974be3a1f79db3/storage-kt-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

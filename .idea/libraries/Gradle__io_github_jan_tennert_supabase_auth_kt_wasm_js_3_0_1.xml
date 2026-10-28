@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.jan-tennert.supabase:auth-kt-wasm-js:3.0.1" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="io.github.jan-tennert.supabase" artifactId="auth-kt-wasm-js" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/auth-kt-wasm-js/3.0.1/32d65369c4fcd5e848d17badc311df8af0fe0af4/auth-kt-wasm-js-3.0.1.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.jan-tennert.supabase/auth-kt-wasm-js/3.0.1/4998ff92b208179a460f65968cf778c9b5bd7a5c/auth-kt-wasm-js-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

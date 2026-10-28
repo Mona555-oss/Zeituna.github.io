@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.compose.animation:animation-core-wasm-js:1.7.0" type="kotlin.wasm.js" external-system-id="GRADLE">
+    <properties groupId="org.jetbrains.compose.animation" artifactId="animation-core-wasm-js" version="1.7.0" baseVersion="1.7.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.animation/animation-core-wasm-js/1.7.0/2de2a6a1fc2a2d2739606bc93ec8b7a527a98a16/animation-core-wasm-js-1.7.0.klib!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.compose.animation/animation-core-wasm-js/1.7.0/16c82e69870dba51cc090c0245a4a4f809cfb955/animation-core-wasm-js-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
