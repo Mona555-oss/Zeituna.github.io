@@ -10,7 +10,6 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.*
 
 object BookititApiService {
@@ -50,13 +49,6 @@ object BookititApiService {
         }
     }
 
-    private fun HttpRequestBuilder.applyCacheControl() {
-        header("Cache-Control", "no-cache, no-store, must-revalidate")
-        header("Pragma", "no-cache")
-        header("Expires", "0")
-        parameter("t", Clock.System.now().toEpochMilliseconds())
-    }
-
     private fun getBaseUrl(): String {
         val p = proxyUrl
         return if (p != null) {
@@ -86,18 +78,8 @@ object BookititApiService {
         val trimmed = input.trim()
         if (trimmed.isEmpty()) return null
         return try {
-            // isLenient = true in Json config handles single quotes correctly.
-            // Blank replacement of ' with " was corrupting data containing apostrophes.
-            json.parseToJsonElement(trimmed)
-        } catch (e: Exception) { 
-            // Fallback for extremely malformed responses if needed
-            try {
-                 json.parseToJsonElement(trimmed.replace("'", "\""))
-            } catch (e2: Exception) {
-                platformLog("BookititAPI", "Failed to parse JSON: $trimmed", true)
-                null 
-            }
-        }
+            json.parseToJsonElement(trimmed.replace("'", "\""))
+        } catch (e: Exception) { null }
     }
 
     suspend fun getAvailability(serviceId: String, date: String, agendaId: String): List<BookititSlot> {
@@ -106,16 +88,15 @@ object BookititApiService {
         val urlPart = "getfreeslots/${PUBLIC_KEY.trim()}/$cleanServiceId/$cleanAgendaId/${date.trim()}"
 
          return try {
-            val response = client.get("${getBaseUrl()}$urlPart") {
-                header("Authorization", makeBasicAuth(urlPart))
-                header("Accept", "application/json")
-                applyCacheControl()
-                parameter("format", "json")
-                applyProxyHeaders()
-            }
+        val response = client.get("${getBaseUrl()}$urlPart") {
+            header("Authorization", makeBasicAuth(urlPart))
+            header("Accept", "application/json")
+            header("Cache-Control", "no-cache") // Forces fresh data from Bookitit
+            parameter("t", Clock.System.now().toEpochMilliseconds()) // Prevents browser caching
+            applyProxyHeaders()
+        }
 
             val body = response.bodyAsText()
-            platformLog("BookititAPI", "Get Availability Response for $date: ${body.take(200)}...")
             val jsonElement = safeParseJson(body)
 
             val hoursArray = when {
@@ -134,7 +115,6 @@ object BookititApiService {
                 BookititSlot(start = time, end = "")
             } ?: emptyList()
         } catch (e: Exception) {
-            platformLog("BookititAPI", "Error in getAvailability: ${e.message}", true)
             emptyList()
         }
     }
@@ -143,11 +123,13 @@ object BookititApiService {
         val cleanServiceId = request.service_id.trim().let { if (!it.startsWith("bkt")) "bkt$it" else it }
         val cleanAgendaId = agendaId.trim().let { if (!it.startsWith("bkt")) "bkt$it" else it }
 
+        // urlPart used for signature calculation - must NOT include query parameters
         val urlPart = "addevent/${PUBLIC_KEY.trim()}"
         val startMins = timeToMinutes(request.time)
         val endMins = startMins + request.duration
 
         return try {
+            // query param 'format=json' removed from URL to avoid signature mismatch.
             val response = client.post("${getBaseUrl()}$urlPart") {
                 header("Authorization", makeBasicAuth(urlPart))
                 header("Accept", "application/json")
@@ -155,18 +137,24 @@ object BookititApiService {
                 setBody(FormDataContent(Parameters.build {
                     append("p_sAgendaID", cleanAgendaId)
                     append("p_sServiceID", cleanServiceId)
+
+                    // Parameters names matched EXACTLY to the addevent documentation screenshot
                     append("p_dStartDate", request.date.trim())
                     append("p_dEndDate", request.date.trim())
                     append("p_iStartTime", startMins.toString())
                     append("p_iEndTime", endMins.toString())
+
                     append("p_sComments", "App Booking")
 
                     if (!request.clientId.isNullOrBlank()) {
+                        // Documentation says p_sClientID (Capital ID)
                         append("p_sClientID", request.clientId.trim())
                     } else {
                         append("p_sClientName", request.name.trim())
                         append("p_sClientEmail", request.email.trim())
                     }
+
+                    // Force JSON response via body parameter
                     append("format", "json")
                 }))
             }
@@ -196,20 +184,14 @@ object BookititApiService {
             val response = client.get("${getBaseUrl()}$urlPart") {
                 header("Authorization", makeBasicAuth(urlPart))
                 header("Accept", "application/json")
-                applyCacheControl()
-                parameter("format", "json")
                 applyProxyHeaders()
             }
             val body = response.bodyAsText()
-            platformLog("BookititAPI", "Get Agenda Config Response: ${body.take(200)}...")
             val jsonElement = safeParseJson(body)
             val configNode = jsonElement?.jsonObject?.get("configuration") ?: jsonElement?.jsonObject?.get("data")?.jsonObject?.get("configuration")
             if (configNode != null) Result.success(json.decodeFromJsonElement<AgendaConfig>(configNode))
             else Result.failure(Exception("Configuration not found"))
-        } catch (e: Exception) { 
-            platformLog("BookititAPI", "Error in getAgendaConfiguration: ${e.message}", true)
-            Result.failure(e) 
-        }
+        } catch (e: Exception) { Result.failure(e) }
     }
 
     suspend fun findClientByEmail(email: String): String? {
@@ -238,7 +220,6 @@ object BookititApiService {
             val response = client.get("${getBaseUrl()}$urlPart") {
                 header("Authorization", makeBasicAuth(urlPart))
                 header("Accept", "application/json")
-                applyCacheControl()
                 applyProxyHeaders()
                 if (timezone != null) parameter("timezone", timezone)
                 parameter("format", "json")
@@ -257,7 +238,6 @@ object BookititApiService {
             val response = client.get("${getBaseUrl()}$urlPart") {
                 header("Authorization", makeBasicAuth(urlPart))
                 header("Accept", "application/json")
-                applyCacheControl()
                 applyProxyHeaders()
                 if (timezone != null) parameter("timezone", timezone)
                 parameter("format", "json")

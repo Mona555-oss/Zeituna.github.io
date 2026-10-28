@@ -3,23 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeituna Web</title>
+    <meta name="theme-color" content="#F7F5EC">
+    <title>Zeituna — Your Language Journey Starts Here</title>
+
     <style>
+        :root {
+            --cream: #F7F5EC;
+            --olive: #596B35;
+            --olive-dark: #46552A;
+            --olive-light: #E8EDDF;
+            --text: #263020;
+            --muted: #747966;
+            --white: #FFFDF8;
+            --border: rgba(89, 107, 53, 0.14);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         html, body {
             width: 100%;
             height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+            background: var(--cream);
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            overflow-x: hidden;
         }
+
+        /* App container — Rendered underneath to ensure it loads properly */
         #compose-receiver {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            display: block;
+        }
+
+        /* Landing page — Overlay on top */
+        #landing-content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            transition: opacity 0.4s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            animation: fade-up 0.8s ease;
+        }
+
+        .logo {
+            width: 80px; height: 80px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
+            background: var(--olive);
+            display: grid; place-items: center;
+            color: var(--white);
+            font-family: Georgia, serif;
+            font-size: 40px;
+            box-shadow: 0 10px 20px rgba(50, 60, 30, 0.15);
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            font-size: 42px;
+            color: var(--text);
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        h1 span { color: var(--olive); font-style: italic; }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Image Placeholder */
+        .hero-image {
+            width: 100%;
+            height: 220px;
+            border-radius: 20px;
+            background: var(--olive-light);
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-image::after {
+            content: "Upload image here";
+            color: var(--olive);
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 18px;
+            background: var(--olive);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(50, 60, 30, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .login-button:hover {
+            background: var(--olive-dark);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #898C7A;
+        }
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
+
 <body>
+    <!-- App receiver stays at the bottom level -->
     <div id="compose-receiver"></div>
+
+    <!-- Landing content stays on top until Log In is clicked -->
+    <div id="landing-content">
+        <main class="container">
+            <div class="logo">S</div>
+            <h1>Find your voice.<br><span>Discover a world.</span></h1>
+            <p class="subtitle">
+                A quieter space to grow your language skills, practise conversations,
+                and connect with tutors for your next online lesson.
+            </p>
+
+            <!-- IMAGE SPACE: Update 'src' with your image file name -->
+            <div class="hero-image">
+                <img src="feature-graphic.png" alt="Two people speaking" onerror="this.style.display='none'">
+            </div>
+
+            <button onclick="startApp()" class="login-button">LOG IN →</button>
+            <p class="footer">Learn at your own pace. Speak with confidence.</p>
+        </main>
+    </div>
+
+    <script>
+        function startApp() {
+            const landing = document.getElementById('landing-content');
+            landing.style.opacity = '0';
+            setTimeout(() => {
+                landing.style.display = 'none';
+                document.body.style.overflow = 'hidden';
+            }, 400);
+        }
+
+        // Auto-start app if returning from PayPal so registration completes
+        if (window.location.search.includes('payment=success')) {
+            document.getElementById('landing-content').style.display = 'none';
+        }
+    </script>
+
+    <!-- Load the application logic once -->
     <script src="webApp.js"></script>
 </body>
 </html>

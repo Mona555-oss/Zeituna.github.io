@@ -1,0 +1,123 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilentSpace</title>
+
+    <style>
+        :root {
+            --cream: #F3F0DF;
+            --olive: #596B35;
+            --olive-dark: #46552A;
+            --text: #263020;
+            --white: #FFFDF5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            border-radius: 28px;
+            background: var(--olive);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cream);
+            font-size: 42px;
+            font-weight: bold;
+            box-shadow: 0 5px 12px rgba(50, 60, 30, 0.15);
+        }
+
+        h1 {
+            font-size: 32px;
+            color: var(--olive);
+            margin-bottom: 14px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #666B55;
+            margin-bottom: 36px;
+        }
+
+        .login-button {
+            display: block;
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--olive);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 7px;
+            box-shadow: 0 3px 5px rgba(50, 60, 30, 0.18);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .login-button:hover {
+            background: var(--olive-dark);
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #85896F;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <div class="logo" aria-label="SilentSpace logo">
+            S
+        </div>
+
+        <h1>Welcome to SilentSpace</h1>
+
+        <p class="subtitle">
+            Your space to learn languages, practise conversation,
+            and book your next online lesson.
+        </p>
+
+        <!-- Change login.html to the actual login page path later -->
+        <a href="login.html" class="login-button">
+            LOG IN
+        </a>
+
+        <p class="footer">
+            Learn at your own pace. Speak with confidence.
+        </p>
+
+    </main>
+</body>
+</html>
+```
