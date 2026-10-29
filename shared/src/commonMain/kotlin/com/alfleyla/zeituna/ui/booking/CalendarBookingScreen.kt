@@ -43,7 +43,6 @@ import silentspace.shared.generated.resources.Res
 import silentspace.shared.generated.resources.bg
 import silentspace.shared.generated.resources.style
 import kotlin.math.roundToInt
-
 @Composable
 fun CalendarBookingScreen(
     viewModel: CalendarBookingViewModel,
@@ -217,7 +216,7 @@ fun CalendarBookingScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = "Available Slots (${localTZ.id})",
+                        text = "Available Slots",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = TurquoiseDark,
@@ -238,10 +237,8 @@ fun CalendarBookingScreen(
                     } else {
                         TimeSlotGrid(
                             slots = slots,
-                            selectedDate = selectedDate,
                             selectedTime = selectedTime,
-                            onTimeSelected = { selectedTime = it },
-                            localTZ = localTZ
+                            onTimeSelected = { selectedTime = it }
                         )
                     }
 
@@ -499,28 +496,16 @@ fun DateSelectionCard(
 @Composable
 fun TimeSlotGrid(
     slots: List<BookititSlot>,
-    selectedDate: LocalDate,
     selectedTime: String?,
-    onTimeSelected: (String) -> Unit,
-    localTZ: TimeZone
+    onTimeSelected: (String) -> Unit
 ) {
-    val teacherTZ = remember { DateTimeUtils.safeTimeZone("Europe/Madrid", preferMadrid = true) }
-
     Column {
         val chunkedSlots = slots.chunked(3)
         chunkedSlots.forEach { rowSlots ->
             Row(modifier = Modifier.fillMaxWidth()) {
                 rowSlots.forEach { slot ->
                     val rawTime = slot.start.take(5)
-                    
-                    val displayTime = remember(rawTime, selectedDate, localTZ, teacherTZ) {
-                        try {
-                            val time = DateTimeUtils.parseLocalTimeSafe(rawTime) ?: return@remember rawTime
-                            val teacherDT = LocalDateTime(selectedDate, time)
-                            teacherDT.toInstant(teacherTZ).toLocalDateTime(localTZ).time.toString().take(5)
-                        } catch (t: Throwable) { rawTime }
-                    }
-
+                    val displayTime = rawTime
                     val isSelected = rawTime == selectedTime
 
                     Card(
