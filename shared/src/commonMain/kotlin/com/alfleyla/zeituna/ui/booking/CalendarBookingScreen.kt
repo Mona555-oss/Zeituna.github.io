@@ -41,7 +41,6 @@ import silentspace.shared.generated.resources.Res
 import silentspace.shared.generated.resources.bg
 import silentspace.shared.generated.resources.style
 import kotlin.math.roundToInt
-
 @Composable
 fun CalendarBookingScreen(
     viewModel: CalendarBookingViewModel,
