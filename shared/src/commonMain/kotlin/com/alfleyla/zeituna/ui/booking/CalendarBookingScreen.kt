@@ -2,7 +2,6 @@ package com.alfleyla.zeituna.ui.booking
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,7 +9,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -217,7 +215,7 @@ fun CalendarBookingScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = "Available Slots (${localTZ.id})",
+                        text = "Available Slots",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = TurquoiseDark,
@@ -238,10 +236,8 @@ fun CalendarBookingScreen(
                     } else {
                         TimeSlotGrid(
                             slots = slots,
-                            selectedDate = selectedDate,
                             selectedTime = selectedTime,
-                            onTimeSelected = { selectedTime = it },
-                            localTZ = localTZ
+                            onTimeSelected = { selectedTime = it }
                         )
                     }
 
@@ -334,9 +330,9 @@ fun CalendarBookingScreen(
                     Spacer(modifier = Modifier.height(64.dp))
                 }
 
-                VerticalScrollbar(
+                PlatformVerticalScrollbar(
                     modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(scrollState)
+                    scrollState = scrollState
                 )
             }
         }
@@ -499,28 +495,16 @@ fun DateSelectionCard(
 @Composable
 fun TimeSlotGrid(
     slots: List<BookititSlot>,
-    selectedDate: LocalDate,
     selectedTime: String?,
-    onTimeSelected: (String) -> Unit,
-    localTZ: TimeZone
+    onTimeSelected: (String) -> Unit
 ) {
-    val teacherTZ = remember { DateTimeUtils.safeTimeZone("Europe/Madrid", preferMadrid = true) }
-
     Column {
         val chunkedSlots = slots.chunked(3)
         chunkedSlots.forEach { rowSlots ->
             Row(modifier = Modifier.fillMaxWidth()) {
                 rowSlots.forEach { slot ->
                     val rawTime = slot.start.take(5)
-                    
-                    val displayTime = remember(rawTime, selectedDate, localTZ, teacherTZ) {
-                        try {
-                            val time = DateTimeUtils.parseLocalTimeSafe(rawTime) ?: return@remember rawTime
-                            val teacherDT = LocalDateTime(selectedDate, time)
-                            teacherDT.toInstant(teacherTZ).toLocalDateTime(localTZ).time.toString().take(5)
-                        } catch (t: Throwable) { rawTime }
-                    }
-
+                    val displayTime = rawTime
                     val isSelected = rawTime == selectedTime
 
                     Card(
@@ -629,9 +613,9 @@ fun BookingSuccessScreen(onGoToProfile: () -> Unit) {
                 Text("Go to My Profile", color = Color.White)
             }
         }
-        VerticalScrollbar(
+        PlatformVerticalScrollbar(
             modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-            adapter = rememberScrollbarAdapter(scrollState)
+            scrollState = scrollState
         )
     }
 }

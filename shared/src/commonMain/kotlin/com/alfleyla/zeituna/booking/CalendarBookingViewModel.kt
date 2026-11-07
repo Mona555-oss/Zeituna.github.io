@@ -43,11 +43,7 @@ class CalendarBookingViewModel : ViewModel() {
     }
 
     private fun safeTimeZone(tz: String? = "Europe/Madrid"): TimeZone {
-        return try {
-            if (!tz.isNullOrBlank()) TimeZone.of(tz) else TimeZone.of("Europe/Madrid")
-        } catch (t: Throwable) {
-            TimeZone.UTC
-        }
+        return com.alfleyla.zeituna.utils.DateTimeUtils.safeTimeZone(tz, preferMadrid = true)
     }
 
     fun fetchCurrentUserProfile() {
@@ -131,7 +127,7 @@ class CalendarBookingViewModel : ViewModel() {
     private fun filterSlotsByConfig(slots: List<BookititSlot>, date: String, config: AgendaConfig?): List<BookititSlot> {
         if (config == null) return slots
         val earliestAllowedTimestamp = config.getMinBookingMillis()
-        val tz = safeTimeZone()
+        val tz = safeTimeZone("Europe/Madrid")
         
         return slots.filter { slot ->
             try {
