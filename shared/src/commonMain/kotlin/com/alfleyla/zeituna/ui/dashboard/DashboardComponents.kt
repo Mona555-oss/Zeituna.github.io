@@ -105,18 +105,9 @@ fun LessonItem(
     var showFullReason by remember { mutableStateOf(false) }
 
     val localTZ = remember { DateTimeUtils.safeTimeZone(null) }
-    
-    val localLessonDateTime = remember(event.date, event.start, event.teacher_timezone, localTZ) {
-        DateTimeUtils.convertTeacherToLocal(
-            dateStr = event.date,
-            timeStr = event.start,
-            teacherTZStr = event.teacher_timezone,
-            localTZ = localTZ
-        )
-    }
 
-    val displayDate = localLessonDateTime?.date?.toString() ?: event.date
-    val displayTime = localLessonDateTime?.time?.toString()?.take(5) ?: event.start.take(5)
+    val displayDate = event.date
+    val displayTime = event.start.take(5)
 
     val scheduledAtLocal = remember(event.created_at, localTZ) {
         try {

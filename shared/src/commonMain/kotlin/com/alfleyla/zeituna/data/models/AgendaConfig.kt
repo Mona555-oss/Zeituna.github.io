@@ -24,19 +24,23 @@ data class AgendaConfig(
 ) {
     /**
      * Returns the exact minimum booking timestamp in milliseconds.
-     * Uses minStartDate if present, otherwise calculates based on maxAdvanceSeeAgenda (as hours).
+     * Uses minStartDate if present, otherwise calculates based on minAdvanceMakeEvent (in minutes).
      */
     fun getMinBookingMillis(): Long {
         if (minStartDate != null && minStartDate > 0) return minStartDate
 
         val now = Clock.System.now().toEpochMilliseconds()
-        // User specifically mentioned minimum_advance_see_agenda (maxAdvanceSeeAgenda) should be in hours.
-        val marginMillis = maxAdvanceSeeAgenda.toLong() * 60 * 60 * 1000
-        val minByMargin = now + marginMillis
+        val minAdvanceMillis = if (minAdvanceMakeEvent > 0) {
+            minAdvanceMakeEvent.toLong() * 60 * 1000L
+        } else {
+            20L * 60 * 60 * 1000L // 20 hours default margin
+        }
+        val minByMargin = now + minAdvanceMillis
 
         val minByDate = calculatedMinEventDate?.let { dateStr ->
             try {
-                LocalDate.parse(dateStr).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+                val madridTz = TimeZone.of("Europe/Madrid")
+                LocalDate.parse(dateStr).atStartOfDayIn(madridTz).toEpochMilliseconds()
             } catch (e: Exception) { null }
         } ?: 0L
 

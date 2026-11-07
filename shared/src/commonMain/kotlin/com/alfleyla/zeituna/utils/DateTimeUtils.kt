@@ -9,22 +9,25 @@ object DateTimeUtils {
     fun safeTimeZone(tz: String?, preferMadrid: Boolean = false): TimeZone {
         // 1. Try provided timezone string
         if (!tz.isNullOrBlank()) {
-            try { return TimeZone.of(tz) } catch (t: Throwable) {}
+            try {
+                val resolved = TimeZone.of(tz)
+                if (resolved.id != "UTC" || tz.equals("UTC", ignoreCase = true)) return resolved
+            } catch (t: Throwable) {}
         }
 
         // 2. If we are looking for the teacher's zone (Madrid)
         if (preferMadrid) {
-            // Spain/Madrid is UTC+2 (Summer, CEST) or UTC+1 (Winter, CET).
-            // September is Summer.
-            val zones = listOf("Europe/Madrid", "CEST", "CET", "UTC+02:00", "UTC+01:00", "+02:00", "+01:00", "Europe/Paris")
-            for (z in zones) {
-                try { 
-                    val resolved = TimeZone.of(z)
-                    // Verify it's not returning UTC if we asked for something specific
-                    if (resolved.id != "UTC" || z == "UTC") return resolved
-                } catch (t: Throwable) {}
+            try {
+                val resolved = TimeZone.of("Europe/Madrid")
+                if (resolved.id != "UTC") return resolved
+            } catch (t: Throwable) {}
+
+            val month = Clock.System.now().toLocalDateTime(TimeZone.UTC).month
+            return if (month in Month.APRIL..Month.OCTOBER) {
+                TimeZone.of("UTC+02:00")
+            } else {
+                TimeZone.of("UTC+01:00")
             }
-            return TimeZone.of("UTC+02:00") // Stronger fallback for Spain in Summer
         }
 
         // 3. Try platform specific ID first
@@ -84,10 +87,29 @@ object DateTimeUtils {
             val time = parseLocalTimeSafe(timeStr) ?: return null
             val teacherTZ = safeTimeZone(teacherTZStr, preferMadrid = true)
             
-            // If they are effectively the same offset at that instant, no shift needed
+            // If teacher and local timezones match (or are both Europe/Madrid), no shift needed!
+            if (teacherTZ.id == localTZ.id || (teacherTZ.id == "Europe/Madrid" && localTZ.id == "Europe/Madrid")) {
+                return LocalDateTime(date, time)
+            }
+
             val teacherDT = LocalDateTime(date, time)
-            val instant = teacherDT.toInstant(teacherTZ)
-            return instant.toLocalDateTime(localTZ)
+            val teacherInstant = try {
+                teacherDT.toInstant(teacherTZ)
+            } catch (t: Throwable) {
+                teacherDT.toInstant(TimeZone.UTC)
+            }
+            
+            val teacherOffset = try { teacherTZ.offsetAt(teacherInstant) } catch (t: Throwable) { UtcOffset.ZERO }
+            val localOffset = try { localTZ.offsetAt(teacherInstant) } catch (t: Throwable) { UtcOffset.ZERO }
+            
+            val diffSeconds = localOffset.totalSeconds - teacherOffset.totalSeconds
+            if (diffSeconds == 0) {
+                return teacherDT
+            }
+
+            val utcInstant = teacherDT.toInstant(TimeZone.UTC)
+            val adjustedInstant = utcInstant.plus(diffSeconds, DateTimeUnit.SECOND)
+            return adjustedInstant.toLocalDateTime(TimeZone.UTC)
         } catch (t: Throwable) {
             return null
         }
